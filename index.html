@@ -59,6 +59,11 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
     }
+    
+    /* 縦横比が変化する際のスムーズなアニメーション */
+    .aspect-transition {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-[#0F172A] font-sans antialiased relative min-h-screen overflow-x-hidden">
@@ -276,7 +281,7 @@
         <div>
           <h4 class="font-black text-slate-900 border-l-4 border-[#4ADE80] pl-2 mb-2">💡 アプリの目的</h4>
           <p class="text-slate-600 text-xs font-medium">
-            本アプリは、Googleの最先端映像・画像生成AI「Flow」を,日本国内の「中小企業」「士業」「Web制作」「ITアプリ開発」「コスメ販売」などの実務現場で最大限に活用するためのプロンプト支援ツールです。
+            本アプリは、Googleの最先端映像・画像生成AI「Flow」を、日本国内の「中小企業」「士業」「Web制作」「ITアプリ開発」「コスメ販売」などの実務現場で最大限に活用するためのプロンプト支援ツールです。
             「考える」を一人にさせないAI伴走をコンセプトに、最適なパラメータ調整を加え、コピペするだけで最高品質のアセットを出力できるように設計されています。
           </p>
         </div>
@@ -286,7 +291,7 @@
           <h4 class="font-black text-slate-900 border-l-4 border-[#4ADE80] pl-2 mb-2">🖼️ 画像生成について (NanoBanana Pro)</h4>
           <ul class="list-disc pl-5 space-y-1.5 text-xs text-slate-600 font-medium">
             <li><strong>消費クレジット：</strong> Flow上の画像生成はクレジット消費なし（0c）で何枚でもお試しいただけます。</li>
-            <li><strong>商用利用可能：</strong> 無料版であっても、完成画像にウォーターマーク（透かし）が一切入らないため、そのままチラシやLP, バナーの実務アセットとして活用できます。</li>
+            <li><strong>商用利用可能：</strong> 無料版であっても、完成画像にウォーターマーク（透かし）が一切入らないため、そのままチラシやLP、バナーの実務アセットとして活用できます。</li>
             <li><strong>日本市場に完全ローカライズ：</strong> デフォルトプロンプトすべてに「日本の」「日本人」の調整を施しているため、海外AI特有の極端なバタくささを排した、清潔感のあるナチュラルな仕上がりになります。</li>
           </ul>
         </div>
@@ -325,6 +330,7 @@
   <!-- JavaScript Logic -->
   <script>
     // Database of Japanese-optimized prompts
+    // All video prompts from 4 to 15 have been redesigned to accept upload images, speak lines (lip-sync), and make gestures (body language), dynamic for 15s/30s/60s lengths, with EN and JP translations.
     const PROMPT_DATABASE = {
       shigyo: {
         name: "士業・コンサルティング業",
@@ -334,121 +340,218 @@
           1: {
             title: "1. 【画像】HP・LP用メインビジュアル",
             category: "image",
+            aspect: "16:9",
             tags: ["信頼感", "親しみやすさ", "ベテラン"],
             template: "洗練されたオフィスで、パソコンを前に優しい笑顔で相談に乗る日本のベテラン{性別}ビジネスコンサルタント。背景は信頼感のあるディープネイビー、誠実な雰囲気、リアルな写真スタイル。",
+            templateEn: "A professional headshot of a veteran Japanese {性別} business consultant in a sophisticated modern office, smiling warmly and helpfully in front of a laptop. Highly reliable and intellectual atmosphere, cinematic lighting, photorealistic 8k.",
             defaults: { "性別": "男性" },
             tip: "コーポレートカラーが青や紺の士業HPに最適な、知性と安心感を与えるメイン画像です。"
           },
           2: {
             title: "2. 【画像】セミナー案内用の人物追加",
             category: "image",
+            aspect: "1:1",
             tags: ["エリア指定", "追加", "受講者"],
             template: "赤枠で囲ったデスクの前のスペースに、熱心にメモを取りながら話を聞く中小企業の{ターゲット}を追加してください。",
+            templateEn: "Add a modern Japanese {ターゲット} sitting in the designated red box area, taking notes intently during a business seminar. Blend naturally with the existing background, matching the lighting and photo quality perfectly.",
             defaults: { "ターゲット": "若手経営者（日本人男性）" },
             tip: "個別相談会やセミナー告知のバナーで「大盛況」の様子をリアルに再現できます。"
           },
           3: {
             title: "3. 【画像】コーポレートカラーの色変更",
             category: "image",
+            aspect: "16:9",
             tags: ["色変更", "ブランディング"],
             template: "赤枠で囲ったネクタイとファイルのカラーを、鮮やかな{カラー}に変更してください。赤枠は生成後描写しないでください。",
+            templateEn: "Change the color of the tie and file folder in the red box area to a vibrant {カラー}, keeping the original realistic fabric and plastic textures intact without drawing the red box in the final output.",
             defaults: { "カラー": "スカイブルー（#22AEC9）" },
             tip: "ストック素材のスーツや小物の色を、自社のブランディングカラーに完全に調和させます。"
           },
           4: {
-            title: "4. 【動画】SNS用お悩み解決ショート動画",
+            title: "4. 【動画】口パク・手ぶりSNS解説",
             category: "video",
-            tags: ["Veo 3.1", "縦長", "ストーリー"],
-            template: "夜遅く、一人でデスクに向かって経営課題に悩む孤独な日本の起業家。その後、画面の横からタブレットを持った{サポーター}がそっと寄り添い、日本の経営者が安心した笑顔を見せる様子。シネマティック、縦長動画。",
-            defaults: { "サポーター": "ベテラン税理士（日本人男性）" },
-            tip: "「経営者を一人にしない」というSmile Plus Consultingのビジョンを体現する、SNSで刺さるショート動画です。"
+            aspect: "9:16",
+            tags: ["画像から開始", "口パク", "手ぶり"],
+            // 15 seconds
+            template15: "（アップロードした{性別}コンサルタントの画像から開始）日本の{性別}コンサルタントが、親しみやすい笑顔でカメラに向かって語りかける。自然な身ぶり手ぶり（ジェスチャー）を交えながら、次のセリフを話し、リップシンクを完全に合わせること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese {性別} consultant image) A Japanese {性別} consultant is talking directly to the camera with a warm, friendly smile. Speaking naturally with gentle hand gestures and synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            // 30 seconds (2 Scenes)
+            template30: "【Flow 2シーン連動構成】\n[シーン1:問題提起]\n（アップロードした{性別}コンサルタントの画像から開始）カメラに向かって心配そうな、しかし寄り添う表情で身ぶり手ぶりを交えながら語りかける。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:解決策]\n表情がパッと明るい笑顔になり、手元で優しくジェスチャーしながら解決へ導くように語りかける。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Problem statement]\n(Starting from the uploaded Japanese {性別} consultant image) Speaking with empathetic expressions and natural hand movements, looking toward the camera. Perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ30_1}\"\n\n[Scene 2: Solution]\nThe consultant's expression brightens into a confident smile, speaking with gentle, reassuring hand gestures. Perfectly synchronized lip-sync matching: \"{セリフ30_2}\"",
+            // 60 seconds (3 Scenes)
+            template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み]\n（アップロードした{性別}コンサルタントの画像から開始）深刻な表情で、経営の孤独や悩みについて、説得力のある落ち着いたトーンで語りかける。手ぶりのジェスチャー。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:ツールの紹介]\n表情が希望に満ちた明るい顔になり、身ぶり手ぶりを大きく交えながら、みっけツールの革新性を解説する。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:応援結び]\n最後は満面の笑顔でカメラに向かって軽くお辞儀をし、頼もしく応援するようなガッツポーズ。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy]\n(Starting from the uploaded Japanese {性別} consultant image) Speaking with a sincere and empathetic expression about business problems in a calm, reassuring tone. Natural hand gestures. Perfectly synchronized lip-sync matching: \"{セリフ60_1}\"\n\n[Scene 2: Introduction]\nExpression brightens as they explain the innovative AI matching tool clearly with energetic hand gestures and body language. Perfectly synchronized lip-sync matching: \"{セリフ60_2}\"\n\n[Scene 3: Encouragement]\nPolitely bowing and making a supportive fist-pump of encouragement toward the camera with a warm smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            defaults: {
+              "性別": "男性",
+              "セリフ15": "資金繰りや補助金にお悩みですか？自社に眠る価値、今すぐ診断してみましょう！",
+              "セリフ30_1": "「補助金って難しそう…」そう諦めていませんか？実は、御社にも使える制度がたくさんあるんです。",
+              "セリフ30_2": "みっけAI診断を使えば、たった3タップで最適な補助金が見つかります。まずは無料体験から！",
+              "セリフ60_1": "経営者の皆さん、財務の悩みは一人で抱え込まないでください。あなたの会社には、まだ気づいていない価値があります。",
+              "セリフ60_2": "私たちの『価値みっけAI』は、複雑な試算表から補助金やアピールポイントを即座に検出。経営の新しい突破口を開きます。",
+              "セリフ60_3": "考えるを、一人にしない。私たちSmile Plusが、全力でサポートします。今すぐお問い合わせください！"
+            },
+            tip: "アップロード画像を基準（始点）にして、セリフに口の動きを完全に連動させるリップシンク機能。身ぶり手ぶり（hand gestures）の指定が、不自然な静止を防ぎます。"
           },
           5: {
-            title: "5. 【動画】フレーム間補完（操作ビフォーアフター）",
+            title: "5. 【動画】フレーム間補完（操作変化）",
             category: "video",
-            tags: ["フレーム間", "ビフォーアフター"],
-            template: "手元の試算表データを見ながら頭を抱えている日本の{役割}が、画面内の『{system名}』をクリックした瞬間、パッと表情が明るくなりガッツポーズをする様子。",
-            defaults: { "役割": "税理士（日本人男性）", "system名": "資産みっけツール" },
-            tip: "始点と終点の画像をFlowに読み込ませ、システム導入による『劇的な解決』をビジュアル化します。"
+            aspect: "16:9",
+            tags: ["前後2枚画像", "滑らかな遷移", "システムデモ"],
+            template15: "手元の試算表データを見ながら頭を抱えている日本の{役割}が、画面内の『{システム名}』をクリックした瞬間、パッと表情が明るくなりガッツポーズをする様子。自然な手の動き。",
+            templateEn15: "(Starting from the uploaded image of Japanese {役割} looking stressed, transitioning to the next uploaded image of them smiling) Generate a smooth cinematic video showing the Japanese {役割} pressing the screen of '{システム名}' and suddenly brightening up with a natural fist pump of joy.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:変化の瞬間]\n（提供したストレスのある表情の始点画像から開始）画面内の『{システム名}』を指先でタップする様子。画面から爽やかなライムグリーンの光が放たれ、表情が和らぐ様子。\n\n[シーン2:喜びの共有]\n嬉しそうにタブレットを相手（日本人女性経営者）に見せ、二人で笑顔で頷き合う、自然な手のジェスチャー。",
+            templateEn30: "[Flow 2-Scene Series]\n[Scene 1: Transition]\n(Starting from the uploaded stressed image) Tapping the screen of '{システム名}' with their finger, causing a gentle emerald glow to light up their face as their stressed expression softens into relief.\n\n[Scene 2: Result]\nReassuringly showing the tablet to the client, nodding together with warm hand gestures in a bright modern office.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:変化の瞬間]\n（提供した始点画像から開始）画面内の『{システム名}』をタップし、データが瞬時にグラフ化される変化。自然な手の動き。\n\n[シーン2:解説]\n嬉しそうに画面を指さしながら、身ぶり手ぶりを交えて笑顔でマッチング結果を指さし解説する。口パク同期。『これでお宝発見です！』\n\n[シーン3:握手]\nコンサルタントと日本人経営者が、がっちりと力強く握手を交わし、未来への希望に満ちた笑顔を交わす様子。",
+            templateEn60: "[Flow 3-Scene Series]\n[Scene 1: Action]\n(Starting from the uploaded stressed image) Tapping the screen of '{システム名}', watching the numbers instantly transform into simple bar charts with natural finger movements.\n\n[Scene 2: Presentation]\nEmpathetically explaining the matches, pointing at the tablet screen with smiling expressions and gentle hand movements. Lip-sync: \"We found your hidden value!\"\n\n[Scene 3: Handshake]\nThe Japanese consultant and the client firmly shake hands with bright, determined smiles in front of a sunny window.",
+            defaults: { "役割": "税理士（日本人男性）", "システム名": "資産みっけツール" },
+            tip: "「フレームから動画」機能。始点（悩む）と終点（喜ぶ）の2枚の画像をアップロードして動かすことで、非常に一貫性の高いストーリーに仕上がります。"
           },
           6: {
             title: "6. 【動画】3枚素材フュージョン動画",
             category: "video",
-            tags: ["3枚合成", "一貫性維持"],
-            template: "（アップロードした日本人男性、日本人女性、伝統的な街並みの3枚を使用）{ロケーション}を背景に、スーツを着た日本のビジネスコンサルタントが、中小企業の日本人経営者と並んで未来のビジョンを笑顔で語り合いながら歩く様子。",
-            defaults: { "ロケーション": "京都の商店街" },
-            tip: "ベース画像から「日本人であること」を完全に維持して、破綻のないPR動画が作れます。"
+            aspect: "16:9",
+            tags: ["3枚合成", "キャラクター一貫性"],
+            template15: "（アップロードした日本人コンサルタント、日本人経営者、伝統的な和風街並みの3枚を使用）{ロケーション}を背景に、スーツを着た日本のビジネスコンサルタントが、中小企業の日本人経営者と並んで、未来のビジョンを笑顔で手ぶりを交えながら語り合う歩行シーン。",
+            templateEn15: "(Starting from the uploaded 3 images: Japanese consultant, client, and scenery) Walking along the elegant {ロケーション}, the Japanese consultant and the client are talking warmly, making natural, gentle hand gestures with reassuring facial expressions.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:歩行対談]\n（アップロード画像から開始）日本の美しい{ロケーション}を笑顔で横並びで歩き、手ぶりを交えながら親しげにディスカッションする様子。\n\n[シーン2:立ち止まりの笑顔]\n二人が立ち止まり、コンサルタントが相手の肩に優しく手を置き、頼もしく微笑みながら頷き合うカット。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Walk & Talk]\n(Starting from the uploaded assets) Walking down the elegant street of {ロケーション} in a relaxed side-by-side shot, engaging in a friendly, gesturing conversation.\n\n[Scene 2: Mutual Trust]\nStopping near a traditional wooden shop; the Japanese consultant places a hand supportively on the client's shoulder, nodding together with warm trust.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:歩行対談]\n（アップロード画像から開始）美しい{ロケーション}を笑顔で対話しながら歩き、身ぶり手ぶりを交えるシーン。\n\n[シーン2:スマートフォンの提示]\nコンサルタントが胸ポケットからスマートフォンを出し、笑顔で『価値みっけアプリ』の画面を経営者に見せる様子。\n\n[シーン3:決意の表情]\n経営者が深く頷いてスマートフォンを握りしめ、二人が同じ進行方向（輝く未来）を見据えて力強く歩み出すラストショット。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Journey]\n(Starting from the uploaded assets) Side-by-side walking shot along the elegant street of {ロケーション}, sharing natural hand-gestured business talk with optimistic faces.\n\n[Scene 2: Matching discovery]\nThe consultant pulls out a smartphone, showing the colorful Japanese match dashboard with a bright, gesturing explanation.\n\n[Scene 3: Forward Vision]\nThe Japanese entrepreneur nods confidently, and both turn their gaze forward (toward a bright future), taking a powerful step forward together.",
+            defaults: { "ロケーション": "京都の町家が並ぶ風情ある通り" },
+            tip: "3枚アセット機能（人物A、人物B、背景）をアップロードして動画化します。カメラワークを「ゆっくり前進（slow pan forward）」させるとドラマチックになります。"
           },
           7: {
             title: "7. 【動画】AIアバターの補助金ナビゲーション",
             category: "video",
-            tags: ["セリフ指定", "リップシンク"],
-            template: "オフィスの受付で、丁寧にお辞儀をする日本の{役割}スタッフ。カメラに向かって笑顔で次のセリフを話す。『{セリフ}』",
-            defaults: { "役割": "女性コンサルタント", "セリフ": "御社にぴったりの補助金、私たちが一緒に見つけます。まずは無料診断をお試しください。" },
-            tip: "「」内の日本語テキスト通りに口を動かす機能。親切な受付案内や診断導入に最適です。"
+            aspect: "9:16",
+            tags: ["口パクアバター", "ジェスチャー"],
+            template15: "オフィスの受付で、丁寧にお辞儀をする日本の{役割}スタッフ（アップロード画像から開始）。カメラに向かって親しみやすい笑顔で、自然な手ぶりのジェスチャーを交えながら次のセリフを語る。リップシンクを完全に一致させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese receptionist image) A friendly Japanese {役割} standing in a modern office reception area bows politely, then speaks directly to the camera with natural hand gestures. Perfectly synchronized lip-sync: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:挨拶とお出迎え]\n（アップロードした画像から開始）日本の{役割}が笑顔で両手を前で重ね、親切にお辞儀をしながらお出迎えの挨拶。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:マッチング提案]\n一歩カメラに近づき、タブレットを優しく指さしながら、解決策のステップを明るく解説。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Welcome]\n(Starting from the uploaded image) A polite Japanese {役割} bows warmly with hands clasped gently in front of them, welcoming the client with synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Suggestion]\nStepping slightly closer, gesturing gently to point towards a tablet with a bright smile. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:親身な寄り添い]\n（アップロードした画像から開始）深刻な経営者の不安を受け止めるように、優しく頷きながら手ぶりを交えて親身に語りかける。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:みっけツールの解説]\nタブレットを胸の前に掲げ、画面をトントンと優しくタップしながら、みっけ診断のシンプルさを楽しく語る。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:次のアクションへの誘導]\n最後は安心感を与える極上の笑顔で、無料相談へ優しくエスコートする手振りと丁寧な一礼。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Deep Empathy]\n(Starting from the uploaded image) Empathizing with business worries, nodding with open-hand gestures in a supportive tone. Natural lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Simple Steps]\nHolding up an iPad, gently tapping the matches displayed on the screen with a friendly, cheerful explanation. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Call to Action]\nEscorting the user with a gentle guiding hand gesture, smiling beautifully, and bowing politely. Perfectly synchronized lip-sync: \"{セフ60_3}\"",
+            defaults: {
+              "役割": "女性コンサルタント",
+              "セリフ15": "補助金みっけ診断へようこそ！簡単な3ステップで、御社にぴったりの支援金を見つけましょう！",
+              "セリフ30_1": "こんにちは！補助金申請って書類も多くて難しそうに感じますよね。でも、もう一人で悩む必要はありません。",
+              "セリフ30_2": "私たちのAIシステムを使えば、たった数問の質問に答えるだけで、受給可能な補助金がすぐに見つかります！",
+              "セリフ60_1": "「うちの事業でも、本当に補助金がもらえるのかな…」そんな不安をお持ちではありませんか？実は多くの企業がチャンスを逃しています。",
+              "セリフ60_2": "この『補助金みっけ診断』なら、スマホから業種と簡単な状況を入力するだけ。AIが膨大なデータベースから一瞬でマッチングします。",
+              "セリフ60_3": "考えるを、一人にしない。私たちが、申請完了までしっかり伴走します。まずは下の診断ボタンからお試しください！"
+            },
+            tip: "ご自身や、Canva等で作成した受付女性の「始点画像」を1枚Flowに読ませ、口パク（セリフ同期）とジェスチャー（hand gestures）を指定して解説を自動化します。"
           },
           8: {
             title: "8. 【動画】4Kアップスケール出力",
             category: "video",
+            aspect: "16:9",
             tags: ["4K", "超高画質"],
-            template: "洗練されたウッド調のカンファレンスルームで、プロジェクターの図表を指さしながら熱弁をふるう日本の税理士（日本人男性）。窓から差し込む美しい朝光、4Kアップスケーラー向けの超緻密なディテール描写。",
+            template15: "洗練されたウッド調のカンファレンスルームで、プロジェクターの図表を指さしながら熱弁をふるう日本の税理士（日本人男性）。自然な手振りのジェスチャー、窓から差し込む美しい朝光、4Kアップスケーラー向けの超緻密なディテール描写。",
+            templateEn15: "A veteran Japanese male accountant giving an inspiring presentation in a bright wooden conference room with beautiful sunlight streaming in. Speaking with highly natural, professional hand gestures. Extremely high-detail photorealism, cinematic volumetric lighting, 4K upscale ready.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:熱心な講義]\n日本の男性税理士がホワイトボードを前に、手振りを交えながら熱意を持って経営戦略を語る様子。\n\n[シーン2:個別対面]\nカメラ（クライアント目線）に向き直り、温かい笑顔で優しく頷きながら、手元の資料をトントンと手振りを交えて指さすカット。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Active teaching]\nA Japanese male accountant stands in front of a glass whiteboard, presenting business growth plans with smart hand movements.\n\n[Scene 2: Empathetic advice]\nTurning toward the camera, nodding reassuringly with a warm, caring smile, naturally gesturing to point at business documents.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:課題解説]\nプロジェクターのデータを示しながら、落ち着いた手振りと真剣な表情で日本の税理士が問題提起するカット。\n\n[シーン2:ソリューション]\n表情が和らぎ、笑顔でタブレットの診断結果を示しながら、明るく解決策を指さす。口パク同期。『これで見通しは明るいです。』\n\n[シーン3:信頼の構築]\n笑顔で立ち上がり、クライアントに優しくお辞儀をし、力強いガッツポーズ。完璧な4K超高精細の質感。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Professional Lecture]\nA Japanese accountant points at projected growth data with calm, authoritative hand gestures and a serious, helpful expression.\n\n[Scene 2: Reassuring solution]\nHis expression softens into a confident smile, holding up a tablet with matching diagnostic results, gesturing naturally. Lip-sync: \"Now the future is clear!\"\n\n[Scene 3: Trusted Bow]\nStanding up politely, bowing with absolute professional sincerity, and giving a subtle, encouraging nod toward the camera.",
             defaults: {},
-            tip: "企業の公式サイトの背景や、大画面で流すセミナーのオープニング動画などに推奨されます。"
+            tip: "企業の公式サイトの背景や、YouTube動画の本編として「ここぞ」という高解像度が欲しい部分に推奨。4K書き出しを選択して処理します。"
           },
           9: {
             title: "9. 【動画】デスク上へのタブレット端末追加",
             category: "video",
+            aspect: "16:9",
             tags: ["オブジェクト追加", "クレジット0"],
-            template: "日本のコンサルタントの手元に、{ツール名}の画面が表示されているスタイリッシュなタブレット端末を挿入してください。",
+            template15: "日本のコンサルタントが笑顔で喋っている手元に、{ツール名}の画面が鮮明に表示されているスタイリッシュなタブレット端末を自然な手の影とともに追加してください。自然な手振りのジェスチャー。",
+            templateEn15: "Insert a modern, sleek tablet device displaying the dashboard of '{ツール名}' naturally in front of the gesturing Japanese consultant's hands. Ensure matching reflections and highly realistic shadows on the wooden desk.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:タブレットの合成]\n（手振りを交える動画から開始）机の上に置かれた『{ツール名}』が表示されたタブレットの画面が、角度や手の影に合わせて自然にフィットしている様子。\n\n[シーン2:画面操作の追加]\nコンサルタントの指先が、タブレット上の日本語ボタンをスマートにトントンと操作し、画面が切り替わるカットの追加。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Object insertion]\n(Starting from a gesturing video) Seamlessly overlay a high-tech tablet displaying the matching app '{ツール名}' onto the table. Shadows and ambient occlusion must match perfectly.\n\n[Scene 2: Tap interaction]\nGenerating a natural finger tap motion on the tablet UI, showing the charts on the screen changing dynamically with realistic hand movement.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:タブレット出現]\n（アップロード動画から開始）商談中の二人の手元に、診断中の『{ツール名}』のタブレットを追加。\n\n[シーン2:指でのスクロール]\nコンサルタントが指を滑らせて（スワイプ）、画面上の折れ線グラフを縦に滑らかにスクロールさせる手振りの追加。\n\n[シーン3:顔のアップ]\nスクロールし終え、笑顔のコンサルタントが相手を見つめて頷き合う、自然なカメラワークの変化。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Device overlay]\n(Starting from client footage) Insert a tablet showing the matching interface of '{ツール名}' with flawless desk shadow alignment.\n\n[Scene 2: Scroll gesture]\nThe consultant's hand naturally swipes the tablet screen, scrolling down the data sheets with fluid finger movement.\n\n[Scene 3: Reassurance nod]\nZooming out slightly to reveal both consultant and entrepreneur nodding with happy smiles, pleased with the tablet matched data.",
             defaults: { "ツール名": "補助金みっけ診断アプリ" },
-            tip: "既存の打ち合わせ動画に対して、後からシームレスに自社のオリジナルツールを画面内に合成できます。"
+            tip: "既存の対談動画に、後から「自社の日本語診断ツール画面」を後付けで合成する非常に便利なプロンプトです。"
           },
           10: {
             title: "10. 【動画】背景の不要な映り込みの除去",
             category: "video",
-            tags: ["オブジェクト削除", "クリーンアップ"],
-            template: "日本のオフィスデスク背景に映り込んでいる、{不要物}を削除して、綺麗な木目調の壁に変えてください。",
-            defaults: { "不要物": "雑然とした書類の束とファイルボックス" },
-            tip: "顧客情報が書かれた書類や、散らかった背景をクレジットなしで綺麗に消去できます。"
+            aspect: "16:9",
+            tags: ["オブジェクト削除", "クレジット0"],
+            template15: "日本のコンサルタントが手振りを交えて喋っているオフィスの背景に映り込んでいる、{不要物}をすべて消去して、洗練された綺麗な木目調の壁に変更してください。",
+            templateEn15: "Completely remove the {不要物} from the office background behind the gesturing Japanese consultant. Replace the empty space with a clean, modern wooden wall partition and out-of-focus indoor green plants.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:背景消去]\n（アップロード動画から開始）背景の『{不要物}』を完全に消し去り、シンプルでクリーンなホワイトボードとパーテーションに変更したカット。\n\n[シーン2:ライティング調整]\n不要物が消えたオフィス全体に、窓からの自然な朝の柔らかな光が差し込むような、清潔感のある明るい光沢処理の追加。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Element Erasing]\n(Starting from custom video) Erase all instances of {不要物} in the background behind the speaker, replaced with a clean white minimalist partition wall.\n\n[Scene 2: Aesthetic lighting]\nAdd a warm, professional sunlight glow spreading across the clean room, completely enhancing the corporate branding of the video.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:ノイズ除去]\n背景の『{不要物}』をすべて削除。完全に整理整頓されたビジネス空間へ。\n\n[シーン2:観葉植物の追加]\n消去したスペースに、お洒落な観葉植物（パキラの鉢植え）を追加してボカす（シネマティック被写界深度）。\n\n[シーン3:人物の引き立ち]\nコンサルタントの手振りの動きがより引き立つよう、人物の輪郭部分に柔らかな逆光（リムライト）を追加した一連のカット変化。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Clean background]\nErase the cluttered {不要物} completely from the background, leaving a perfect minimalist workspace.\n\n[Scene 2: Greenery insert]\nInsert an elegant potted indoor plant in the erased space with natural bokeh, creating a premium depth of field.\n\n[Scene 3: Subject pop]\nEnhance the overall focus on the gesturing consultant by adding a subtle cinematic backlighting (rim light) around their silhouette.",
+            defaults: { "不要物": "雑然と置かれた書類の束や関係ないポスター" },
+            tip: "顧客情報が書かれた紙や、散らかった店舗の背景を、クレジット消費ゼロで完全に消し去る実務向け機能です。"
           },
           11: {
             title: "11. 【動画】カメラポジション変更（俯瞰アングル）",
             category: "video",
-            tags: ["アングル変更", "シネマティック"],
-            template: "（カメラの位置：上に移動）デスクを挟んで日本のコンサルタントと日本の経営者が熱心に戦略を練っている様子を、少し{角度}から見下ろすような画角に変更。",
-            defaults: { "角度": "斜め上の高いアングル" },
-            tip: "平坦な正面アングルから、映画のようなダイナミックで知的さを感じさせる俯瞰アングルに補完します。"
+            aspect: "16:9",
+            tags: ["カメラ移動", "俯瞰"],
+            template15: "（カメラの位置：上に移動）デスクを挟んで日本のコンサルタントと日本の経営者が、手振りを交えて熱心に戦略を練っている様子を、少し斜め上の高いアングルから撮影した俯瞰アングルに変更。",
+            templateEn15: "(Camera instruction: Move up to high angle) Change the perspective to a high-angle shot looking down at the Japanese consultant and client discussing strategy around a wooden table, making natural hand gestures.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:斜め上の俯瞰]\n（アップロード画像から開始）二人の打合せシーンを、少し斜め上の高いアングルからデスク全体を見下ろすように撮影。自然な手ぶりの動き。\n\n[シーン2:ズームインへの連動]\n俯瞰位置から、デスクの上の補助金みっけアプリの画面（iPad）に向かって、カメラがゆっくりと吸い込まれるように下降していくカットの連動。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: High angle view]\n(Starting from the uploaded assets) Change the camera angle to a high-angle perspective, looking down dynamically at the consultant and client talking with hand gestures.\n\n[Scene 2: Downwardドリードリー]\nSlowly glide the camera down from the high angle toward the colorful dashboard displayed on the tablet screen on the desk.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:俯瞰全景]\n真上近くの非常に高いカメラアングルから、木目調デスクを囲んで熱心に語り合う日本のビジネスコンサルタントと起業家。自然なジェスチャー。\n\n[シーン2:コンサルタントの目線への下降]\nカメラがスーッと高度を下げ、コンサルタントの笑顔の表情の横顔を捉えるアングルへのシームレスな移行。\n\n[シーン3:経営者の納得顔への回り込み]\nそのまま回り込み（回り込みカメラ）、嬉しそうに頷く日本人起業家の表情をバストアップで捉える3段カメラワーク構成。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Overhead view]\nLooking down from a dramatic high angle at the Japanese consultant and client working around the table with hand gestures.\n\n[Scene 2: Descending camera]\nSmoothly lower the camera altitude, sliding down to the side profile of the consultant who is explaining with a warm smile.\n\n[Scene 3: Circling around]\nOrbit around to catch the confident, happy facial expression of the nodding Japanese client, concluding in a close-up shot.",
+            defaults: {},
+            tip: "正面の単調な映像を、高い位置からの「インテリジェンス」を感じさせるシネマティックな打合せシーンに変貌させます。"
           },
           12: {
             title: "12. 【動画】カメラワーク変更（回り込み）",
             category: "video",
-            tags: ["カメラワーク", "躍動感"],
-            template: "（カメラワーク：右に回り込みを選択）日本のオフィスのデスクの上に置かれた最新の{デバイス}に向かって、カメラが左から右へ滑らかに回り込んでいくワーク。",
-            defaults: { "デバイス": "補助金シミュレータ搭載のiPad" },
-            tip: "ただ置かれているデバイスを映すのではなく、立体感と高級感のあるプロ並みのカメラワークを加えます。"
+            aspect: "16:9",
+            tags: ["カメラワーク", "ドリー軌道"],
+            template15: "（カメラワーク：右に回り込みを選択）日本のオフィスのデスクの上に置かれた『{デバイス}』を操作する日本のユーザーの手元に向かって、カメラが左から右へ滑らかに回り込んでいくワーク。手振りと指の動きが極めて自然なこと。",
+            templateEn15: "(Camera instruction: Orbit right) Circle the camera smoothly from left to right, focusing on the Japanese developer's hands naturally gesturing and operating the screen of '{デバイス}' resting on a wooden desk.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:回り込みタップ]\n（アップロード画像から開始）タブレットの画面上の日本語ボタンを指先でタップする手元を中心に、カメラが滑らかに時計回りに回り込むカット。\n\n[シーン2:操作者の笑顔のイン]\n回り込みが終了するタイミングで、カメラが少しチルトアップし、操作している日本人経営者の安心した笑顔の表情を捉える連動。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Orbit Tap]\n(Starting from assets) Orbit the camera smoothly clockwise around the hands tapping the tablet '{デバイス}' with fluid finger gestures.\n\n[Scene 2: Smiling Reveal]\nAs the camera orbits right, tilt up slightly to reveal the relieved, happy smiling face of the Japanese entrepreneur.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:左回り込み]\n最初は机の上の『{デバイス}』を斜めから捉え、左方向にカメラが緩やかに周り込む、自然な手振りの操作。\n\n[シーン2:指でのフリック]\n画面上のデータをスマートにスクロール操作する指元のクローズアップに、カメラがぐっと近づくドリードリーイン。\n\n[シーン3:笑顔の対面への回り込み]\nそのままカメラが右へスライドし、マッチング結果を見てガッツポーズをする日本人開発者と経営者の二人を捉えるプロ並みのカメラワーク演出。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Left Orbit]\nOrbit the camera left, capturing a side angle of the tablet '{デバイス}' being operated on a clean desk with fluid finger actions.\n\n[Scene 2: Close-up zoom]\nDrift the camera inward closely to emphasize a sleek finger swipe, showing data shifting on the device interface.\n\n[Scene 3: Success Orbit]\nOrbit back to the right, opening up to show both consultant and client doing a mutual nod of success in a sunny modern workspace.",
+            defaults: { "デバイス": "補助金みっけ診断iPad" },
+            tip: "プロの撮影レール（スライダー）を使ったかのような、重厚感のある「物撮り・UI操作シーン」を生成します。"
           },
           13: {
             title: "13. 【動画】シーンビルダー用のカット編集",
             category: "video",
-            tags: ["シーン結合", "トリミング"],
-            template: "日本のコンサルタントが笑顔で名刺を渡す冒頭の3秒、および最後のガッツポーズをする3秒のみを抽出。シーンビルダーのトリミングバーを使用し、無駄な会話シーンをカットして15秒のスマートな動画を作成。",
+            aspect: "16:9",
+            tags: ["シーン結合", "タイムライン編集"],
+            template15: "日本のコンサルタントが笑顔で名刺を渡すシーン（アップロード画像から開始）。手振りのジェスチャー。タイムライン上のタイムコードをトリミングして、無駄のない最初の5秒、最後の2秒を正確に結合するシーンビルダー指示文。",
+            templateEn15: "(Video trimming using Scene Builder) Trim the generated footage of the Japanese consultant handing over their business card with polite hand gestures. Slice from 0:00 to 0:05, and merge with the last 2 seconds of bowing politely.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:最初の5秒]\n（アップロードした男性の画像から開始）名刺を両手で差し出す日本のお辞儀。手振りのジェスチャー。『どうぞよろしくお願いします。』\n\n[シーン2:後半の5秒]\n打合せが順調に進み、手元で書類を優しく指さしながら笑顔でアドバイスする解説カット。これらをFlowのビルダー上で並べて10秒のスマート動画に再構成する指示。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Welcome Bow]\n(Starting from the uploaded assets) The Japanese expert hands over a business card with a polite bow and welcoming gesture. Trimming first 5 seconds.\n\n[Scene 2: Reassurance talk]\nMerging the walk-and-talk discussion clip with natural hand movements. Concatenate both segments using Flow timeline tool.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:挨拶(3秒)]\nコンサルタントがお辞儀。リップシンク完璧。\n\n[シーン2:診断中(5秒)]\n二人でタブレットを見つめ、指先でアプリをスクロールする動き。自然な手振りの対話。\n\n[シーン3:解決のガッツポーズ(4秒)]\nお宝マッチングに喜び、笑顔でガッツポーズする二人のマルチカット。すべてシーンビルダー上でタイムコードを繋ぎ合わせ、12秒の完璧なダイジェストPR動画を作成する指示。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Introduction (3s)]\nPolite Japanese bow with supportive hand gesture. Lip-sync matching. Trimming 0:00-0:03.\n\n[Scene 2: Matching (5s)]\nClips of client scrolling the matching app with smiling expressions and gesturing talk. Trimming 0:05-0:10.\n\n[Scene 3: Success (4s)]\nFinal happy fist-pump. Concatenate all 3 trimmed scenes in the Flow Scene Builder into a perfect 12-second marketing video.",
             defaults: {},
-            tip: "Flow内で直接カット編集を行うためのシチュエーション指示です。"
+            tip: "生成された映像を外部編集ソフトを使わず、Flow内の「タイムラインバー」を操作してカットし、綺麗な1本に繋ぎ合わせるためのテクニックです。"
           },
           14: {
-            title: "14. 【動画】台本からChatGPT量産プロンプト生成",
+            title: "14. 【動画】台本からChatGPT大量プロンプト生成",
             category: "video",
-            tags: ["大量量産", "ChatGPT連携"],
-            template: "「以下の日本の士業向け解説台本に沿って、視聴維持率を最大化するVeo 3.1（Flow）用の動画プロンプトを20個、コピペ可能な英語でリスト出力して。登場人物は一貫して{人物設定}、セリフや字幕の描写は不要。」",
+            aspect: "9:16",
+            tags: ["ChatGPT連携", "大量作成", "台本構成"],
+            template15: "「以下の日本の士業向け解説台本に沿って、視聴維持率を最大化するVeo 3.1（Flow）用の動画プロンプトを20個、コピペ可能な英語でリスト出力して。登場人物は一貫して（アップロードした日本人コンサルタントの画像）を使用。自然な口パク（lip-sync）と手ぶり（hand gestures）の指定を必ず全てのプロンプトに含めること。」",
+            templateEn15: "\"Generate 20 optimized Veo 3.1 video prompts based on the following Japanese consult script. The subject must be consistent with the uploaded Japanese expert image. Ensure EVERY prompt explicitly includes 'speaking with perfectly synchronized Japanese lip-sync' and 'natural, gentle hand gestures' for fluid movement.\"",
+            template30: "「（アップロードした日本の{人物設定}画像から開始）15秒ずつの解説カットを2本結合して30秒にするための、ChatGPT用プロンプト生成。シーン1（問題提起）とシーン2（解決）が連動するよう、どちらも同じ日本人キャラクター・同じ服装・自然な口パクと身ぶり手振りの物理指示を英語のプロンプトで2ペア一括出力して。」",
+            templateEn30: "\"Generate a set of 2 connected Veo 3.1 video prompts (15s each) to make a seamless 30s video. The character must strictly match the uploaded Japanese {人物設定} image. Both scenes must include 'speaking with perfectly synchronized Japanese lip-sync' and 'natural hand gestures and open-palm body language'.\"",
+            template60: "「（アップロードした日本の{人物設定}画像から開始）15秒の動画を4本シーンビルダーで繋いで60秒の求人ストーリーにする。シーン1（挨拶）、シーン2（社内の様子）、シーン3（指導シーン）、シーン4（応募の呼びかけ）のプロンプト構成。すべてに『アップロード画像と同一人物』『手振りと口パクが完璧に同期している』指示を英語のプロンプトで4カット一括出力して。」",
+            templateEn60: "\"Generate a series of 4 connected Veo 3.1 prompts (15s each) to construct a complete 60s promotional story. The speaker must strictly match the uploaded Japanese {人物設定} image. All 4 prompts must contain 'natural hand gestures', 'reassuring body language', and 'synchronized lip-sync matching the dialogue text'.\"",
             defaults: { "人物設定": "50代の信頼感のある日本の男性税理士" },
-            tip: "このプロンプトをまずChatGPTに投げ、一気に20個のFlow用プロンプトを作らせて爆速量産します。"
+            tip: "この指示をまずChatGPT等に投げ、一気に20個のFlow用プロンプト（英語）を生成させて、Flowにコピペするだけで爆速量産できます。"
           },
           15: {
             title: "15. 【動画】同一人物の5カットストーリー",
             category: "video",
-            tags: ["同一人物", "ストーリー制作"],
-            template: "【Flow5カット連動】\nカット1: 朝,日本のオフィスで机の上で数字が合わず焦る日本人経営者\nカット2: 日本人経営者がスマホで『{お宝ツール}』を見つけ、目を見開く\nカット3: 日本の税理士事務所を訪れ、コンサルタントと笑顔で握手する日本人経営者\nカット4: 財務状況がクリーンになり、晴れ晴れとした顔の日本人経営者\nカット5: 夜、オフィスの明かりを消してスッキリと帰路につく日本人経営者",
-            defaults: { "お宝ツール": "価値みっけ診断システム" },
+            aspect: "9:16",
+            tags: ["一貫性ストーリー", "5カット構成"],
+            template15: "【Flow 5カット連動】\n（アップロードした日本の{ターゲット}の画像から一貫した顔で開始）\nカット1: 朝、日本のオフィスで机の上で焦る日本人経営者\nカット2: 日本人経営者がスマホで日本語の『{お宝ツール}』を見つけ、目を見開く\nカット3: 日本の税理士事務所を訪れ、コンサルタントと笑顔で握手する日本人経営者。自然な手振りのジェスチャー。\nカット4: 財務状況がクリーンになり、晴れ晴れとした顔の日本人経営者。笑顔で手振りを交える。\nカット5: 夜、オフィスの明かりを消してスッキリと帰路につく日本人経営者の頼もしい後ろ姿",
+            templateEn15: "[Flow 5-Scene Connected Story Series]\n(Character's face must strictly match the uploaded Japanese {ターゲット} image across all scenes)\nScene 1: Morning, a stressed Japanese entrepreneur looking at paper ledger sheets with worried hands.\nScene 2: Bright eyes, discovering the matching tool dashboard of '{お宝ツール}' on their smartphone screen.\nScene 3: Shaking hands firmly with a Japanese tax expert in a bright modern office with warm gesturing bows.\nScene 4: A clear, relieved facial expression of the Japanese entrepreneur, talking with happy, open-palm hand gestures.\nScene 5: Evening, turning off the office light and walking home with a confident, proud posture.",
+            template30: "【Flow 5カット連動 - 30秒圧縮構成】\n（アップロードした日本の{ターゲット}の画像から一貫した顔で開始）\n上記5シーン（朝、ツール発見、面談、解決、笑顔）の展開速度を「テンポの良いクイックカット」に指定。各シーンをタイムラインで正確に6秒ずつにトリミングして結合。すべてに「自然な手のジェスチャー」「日本語のリップシンク」を英語指示に含める。",
+            templateEn30: "[Flow 5-Scene Story Series - 30s Fast Edition]\n(Character's face must strictly match the uploaded Japanese {ターゲット} image across all scenes)\nGenerate the 5 scenes (Scene 1: Stressed business owner, Scene 2: Discovery, Scene 3: Handshake, Scene 4: Relief, Scene 5: Happy exit) with rapid cinematic pacing. Each scene must feature fluid, natural hand gestures and perfectly matched, synchronized lip-sync. Process for 6s each.",
+            template60: "【Flow 5カット連動 - 60秒完全構成】\n（アップロードした日本の{ターゲット}の画像から一貫した顔で開始）\n上記5シーンのストーリーを深く描く。各12秒構成。コンサルタントとの日本語の打合せシーン（カット3）や、自社の強みに気づいて笑顔で熱弁するシーン（カット4）には、詳細な口パク台本と頼もしい身ぶり手ぶりの物理命令を含め、1分間の感動CMをシーンビルダーで繋ぎ合わせる指示。",
+            templateEn60: "[Flow 5-Scene Story Series - 60s Epic Edition]\n(Character's face must strictly match the uploaded Japanese {ターゲット} image across all scenes)\nGenerate a complete 60s emotional journey in 5 scenes (12s each). Scene 3 (empathetic consulting) and Scene 4 (confident speech) must feature natural, expressive hand gestures, natural head tilts, and synchronized lip-sync matching the business dialogue. Highly cinematic, realistic lighting.",
+            defaults: { "ターゲット": "20代の日本の若手起業家男性", "お宝ツール": "価値みっけ診断システム" },
             tip: "NanoBanana Proで5つの統一画像を生成後、Veoに読ませてシーンビルダーで繋ぐ『最強のストーリーマーケティング』です。"
           }
         }
@@ -461,122 +564,33 @@
           1: {
             title: "1. 【画像】LP・ヒーロービュー用ビジュアル",
             category: "image",
+            aspect: "16:9",
             tags: ["テクノロジー", "Webデザイン", "未来感"],
             template: "明るく開放的なITオフィスのデスクで、{デバイス}に向かって真剣に作業する日本の女性Webデザイナー。画面には美しいWebサイトのプロトタイプが光っている。ナチュラルな照明、洗練された北欧風インテリア、超高画質。",
+            templateEn: "A Japanese female Web designer focusing intently on her work at a bright, sunlit IT office desk with '{デバイス}'. Modern Nordic interior, soft cinematic lighting, premium web mockups shining on screens, photorealistic.",
             defaults: { "デバイス": "最新のデュアルモニター" },
             tip: "制作会社HPや、デザインスクール等のLPの顔となる、クリーンで大人の知的な美しさを感じさせるメイン画像です。"
           },
-          2: {
-            title: "2. 【画像】既存素材への「新しいデバイス」追加",
-            category: "image",
-            tags: ["ガジェット追加", "モックアップ"],
-            template: "赤枠で囲ったテーブルの空きスペースに、最新の{ガジェット}を置いてください。画面にはスマートなグラフが表示されており、反射が自然であること。",
-            defaults: { "ガジェット": "折りたたみ式スマートフォン" },
-            tip: "無料素材にありがちな『古いスマホ』を、一瞬で最新ガジェットへアップデートできます。"
-          },
-          3: {
-            title: "3. 【画像】服・小物のカラーバリエーション色変更",
-            category: "image",
-            tags: ["カラーチェンジ", "クライアント提案"],
-            template: "赤枠で囲ったソファと、日本の女性モデルが着ているジャケットの色を、クライアントの指定カラーである{指定色}に変更してください。質感（リネンとウール）は完全に維持すること。",
-            defaults: { "指定色": "ミントグリーン（#A3E635）" },
-            tip: "クライアントから「コーポレートカラーに合わせてほしい」言われた際、数秒でモックを作成できます。"
-          },
           4: {
-            title: "4. 【動画】LP背景用のループ風動画",
+            title: "4. 【動画】口パク・手ぶりSNS解説",
             category: "video",
-            tags: ["背景動画", "シネマティック"],
-            template: "日本の洗練されたミニマルなデザイン事務所。日本人クリエイターが手元でマウスやペンタブレットを滑らかに動かしてコーディングやデザインを行う様子。全体的に{トーン}、スローモーション、シネマティックで主張しすぎない背景用動画。",
-            defaults: { "トーン": "ローコントラストで淡いブルーグレーのトーン" },
-            tip: "LPのファーストビュー背景に重ねることで、サイト全体の高級感と動的なプロっぽさが一瞬で跳ね上がります。"
-          },
-          5: {
-            title: "5. 【動画】デザイン提案のインタラクティブ遷移",
-            category: "video",
-            tags: ["ビフォーアフター", "動きの補完"],
-            template: "日本の住宅リフォーム会社のワイヤーフレーム（白黒の骨組み画像）から、一瞬で鮮やかな{完成デザイン}（完成LPの画像）へと滑らかにグラデーションしながらモーフィングで切り替わるアニメーション動画。",
-            defaults: { "完成デザイン": "近未来的なスカイブルーのLPデザイン" },
-            tip: "制作実績ページに載せるだけで、他社との提案力の違いを直感的に見せつけられます。"
-          },
-          6: {
-            title: "6. 【動画】3枚画像融合（クライアント素材×背景）",
-            category: "video",
-            tags: ["高精度フュージョン", "一貫性維持"],
-            template: "（日本のクライアントから提供されたロゴ、オフィスの実機写真、日本人モデルの3枚を使用）モダンなWeb制作会社のロゴが浮かぶ空間で、日本の女性デザイナーが笑顔で{製品名}を操作している様子を融合して生成。背景は滑らかにボケている。",
-            defaults: { "製品名": "ノーコードCMSエディタ" },
-            tip: "借り物の素材ではなく、実物の製品ロゴとオフィス写真をブレンドした『嘘のないオリジナルPR動画』が作れます。"
-          },
-          7: {
-            title: "7. 【動画】AIデザイナーによるビデオ提案書",
-            category: "video",
-            tags: ["ナビゲーター", "音声同期"],
-            template: "洗練されたセミナールームに立つ、カジュアルスマートな日本の{スペシャリスト}。笑顔でカメラに向かって次のセリフを語りかける。『{提案メッセージ}』",
-            defaults: { "スペシャリスト": "女性シニアデザイナー", "提案メッセージ": "Webサイトは24時間働く営業マンです。デザインだけでなく、成約率にこだわった動線設計をご提案します。" },
-            tip: "提案資料の冒頭に差し込むだけで、提案の説得力と「今っぽさ」が圧倒的に高まります。"
-          },
-          8: {
-            title: "8. 【動画】YouTubeヘッダー・4K動画素材",
-            category: "video",
-            tags: ["4K", "ポートフォリオ用"],
-            template: "日本のハイテクオフィス。光ファイバーが美しく明滅するサーバーラックのクローズアップから、徐々に引いていき、大きなオフィスでWebプログラミングを行う日本の若いクリエイター達を捉えるシネマティックショット。超高解像度4Kアップスケール用。",
-            defaults: {},
-            tip: "自社のプロモーションビデオや、信頼性を重視する大企業のシステム開発会社向けHPの背景に最適です。"
-          },
-          9: {
-            title: "9. 【動画】商談テーブルへの「コーヒー」追加",
-            category: "video",
-            tags: ["ディテール追加", "無料編集"],
-            template: "日本の打ち合わせルームのデスクの上の寂しい空きスペースに、{アイテム}を挿入してください。湯気がうっすらと立ち上っており、リアリティがあること。",
-            defaults: { "アイテム": "湯気が立つ白いマグカップに入ったコーヒー" },
-            tip: "寂しい印象だった打ち合わせの動画に、温かみと自然な生活感をプラスします。"
-          },
-          10: {
-            title: "10. 【動画】不要な配線・ノイズの除去",
-            category: "video",
-            tags: ["不要物カット", "クレジット節約"],
-            template: "日本のモダンなオフィスのデスクの下やパソコン周辺に見えている、{ノイズ}をすべて削除して、完全に整理整頓された美しいミニマルオフィスの床に変えてください。",
-            defaults: { "ノイズ": "ごちゃごちゃした黒い配線や電源タップ" },
-            tip: "動画内のごちゃつきを一瞬で消し去り、スマートで先進的なオフィス環境を演出します。"
-          },
-          11: {
-            title: "11. 【動画】カメラポジション変更（真上からのフラットレイ）",
-            category: "video",
-            tags: ["真上アングル", "フラットレイ"],
-            template: "（カメラの位置：上から垂直に見下ろすアングルに変更）スケッチが描かれているノート、色見本、iPad、スマートフォンが美しく配置された日本のデザイナーの{カラー}作業デスクを、真上から撮影したフラットレイ構図に変更。",
-            defaults: { "カラー": "温かみのあるオーク木目" },
-            tip: "デザイン系のクリエイティブな雰囲気を一瞬で表現できる人気の「真上撮影アングル」を再現します。"
-          },
-          12: {
-            title: "12. 【動画】カメラワーク変更（ズームイン）",
-            category: "video",
-            tags: ["ズームイン", "ドリーイン"],
-            template: "（カメラの位置：ドリーイン＆ズームインを選択）日本人エンジニアのディスプレイに表示されている{デザイン画面}の中心に向かって、カメラがゆっくりと吸い込まれるように吸着していくシネマティックワーク。",
-            defaults: { "デザイン画面": "売上が3倍になる美しいランディングページ" },
-            tip: "視聴者の視線をWebサイトの重要なヘッドコピーやボタンへ自然に誘導する、実用性の高いカメラワークです。"
-          },
-          13: {
-            title: "13. 【動画】LP組み込み用シーン結合",
-            category: "video",
-            tags: ["LP組込", "シーンビルダー"],
-            template: "日本のクリエイターが登場する「デザインの企画・ブレインストーミング」「デザイン制作中」「日本のクライアントに納品して笑顔」の3つの異なる動画をシームレスに結合し、合計15秒の「サービス紹介PV」をFlow上で完結させます。",
-            defaults: {},
-            tip: "外部ソフトを使わず、ブラウザ上のFlowだけでWebに即組み込める紹介動画が完成します。"
-          },
-          14: {
-            title: "14. 【動画】制作実績PVの構成案から一括プロンプト生成",
-            category: "video",
-            tags: ["ChatGPT連携", "構成一括"],
-            template: "「日本のWebデザイン制作会社のHPに掲載する実績紹介動画（15秒）の構成を考え、Flow（Veo 3.1）にコピペして一発で高品質動画が作れる詳細な日本のシチュエーションに基づく英語プロンプトを10個出力して。モダン、洗練、{テーマ}を意識。」",
-            defaults: { "テーマ": "ミニマリズムとスピード感" },
-            tip: "ChatGPTに実績サイトのURLや特徴を投げてプロンプト化させれば、数分で実績紹介動画が完成します."
-          },
-          15: {
-            title: "15. 【動画】1つのLPデザインができるまでのストーリー",
-            category: "video",
-            tags: ["実績ストーリー", "同一人物"],
-            template: "【Flow5カット連動】\nカット1: {クライアント}がオンライン会議で日本の制作会社と悩みを相談している様子\nカット2: 日本人女性デザイナーが白い紙に手書きでワイヤーフレームのラフを描く手元\nカット3: パソコン画面上で、Figmaを使って美しいデザインパーツが組み立てられていく様子\nカット4: スマホ実機で、完成した素晴らしい日本語LPがスムーズに動いている手元\nカット5: 日本人クライアントが売上ダッシュボードを見て、喜びの笑顔を見せる日本のオフィスの様子",
-            defaults: { "クライアント": "30代の個人サロンオーナーの日本人女性" },
-            tip: "Web制作会社の『最も説得力のある営業資料』になる「制作物語動画」を驚くほどの省エネで生み出します。"
+            aspect: "9:16",
+            tags: ["画像から開始", "口パク", "手ぶり"],
+            template15: "（アップロードした日本のデザイナー女性の画像から開始）日本の女性デザイナーが、笑顔でカメラに向かって語りかける。自然な手ぶりを交えながら、次のセリフを話し、リップシンクを完全に合わせること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese designer image) A Japanese female designer talks to the camera with a friendly, welcoming smile, gesturing naturally with her hands. Perfectly synchronized lip-sync: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:問題提起]\n（アップロードしたデザイナー画像から開始）穏やかな表情から始まり、Webサイトの成果について手振りを交えながら語る。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:強みの提案]\n笑顔になり、親しみやすいジェスチャーで、制作会社の強みを指先を使いながらアピール。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Challenge]\n(Starting from the uploaded Japanese designer image) Speaking to the viewer with natural hand movements about web strategy. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Solution]\nSmiling brightly, emphasizing our responsive design speed with gentle hand gestures and direct eye contact. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:共感]\n（アップロードしたデザイナー画像から開始）「ホームページを作ったけど集客できない…」というお悩みに寄り添うように、親身に手振りを交えて語る。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:制作のこだわり]\n笑顔でタブレットのUIを示しながら、成約率を上げるデザインの仕組みを楽しく指さし解説。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:応援結び]\n最後は安心感を与える満面の笑顔で一礼し、力強く頷く。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy]\n(Starting from the uploaded Japanese designer image) Speaking supportively with natural hand gestures about why standard websites fail to get inquiries. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Explanation]\nHolding a tablet, pointing gently at the matches and match rate dashboard UI with an optimistic, gesturing tone. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Commitment]\nClosing with a confident, beautiful smile, nodding with a polite bow toward the camera. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            defaults: {
+              "セリフ15": "集客でお悩みですか？ただ美しいだけでなく、お客様を増やすホームページをご提案します！",
+              "セリフ30_1": "「ホームページを作ったけれど、問い合わせが来ない…」そう悩んでいませんか？デザインだけでは成果は出ません。",
+              "セリフ30_2": "私たちは、ターゲットが思わず『みっけ！』と嬉しくなる成約動線を、徹底的に考えてデザインしています。",
+              "セリフ60_1": "せっかく予算をかけてホームページを作るなら、しっかり仕事をしてくれる『働くサイト』にしませんか？",
+              "セリフ60_2": "私たちは、お客様の会社の隠れた『お宝（強み）』を引き出し、それを直感的に伝える美しいランディングページを構築します。",
+              "セリフ60_3": "考えるを、一人にしない。御社のWeb伴走者として、全力で売上アップをサポートします。ぜひご相談ください！"
+            },
+            tip: "外部画像を元にして、デザイナーがそのまま解説しているような、安心感と親しみやすさ抜群のSNS広告用ショート動画が完成します。"
           }
         }
       },
@@ -588,122 +602,33 @@
           1: {
             title: "1. 【画像】先進的なアプリ利用イメージ",
             category: "image",
+            aspect: "16:9",
             tags: ["みっけシリーズ", "未来的", "3D"],
             template: "輝くホログラムのデータグラフ（みっけアプリの画面イメージ）を指先で操作する、テック系の日本の{性別}。背景は暗めで、ブルー or パープルのネオンライトがスタイリッシュに光る、3D claymorphism 調の日本の洗練されたITツールクオリティ。",
+            templateEn: "A highly advanced Japanese {性別} operating a glowing hologram interface showing statistical charts. Stylized tech background with blue and violet neon lines, 3D claymorphism design, hyper-realistic.",
             defaults: { "性別": "女性エンジニア" },
             tip: "先進的なAIツールやSaaSのランディングページで、一歩先を行く未来感を演出するメインビジュアルです。"
           },
-          2: {
-            title: "2. 【画像】画面モックへの新UI要素の挿入",
-            category: "image",
-            tags: ["UI追加", "機能アピール"],
-            template: "赤枠で囲った日本のユーザーが持つタブレットの画面上に、{UI要素}を美しくデザインして追加してください。その他の指の形や反射は完全になじませること。",
-            defaults: { "UI要素": "『自動補助金マッチング率98%』という日本語とゴールドのポップアップカード" },
-            tip: "アプリの強みとなる機能を、実際のUIモック上にピンポイントでマッピングできます。"
-          },
-          3: {
-            title: "3. 【画像】アプリテーマカラーの変更",
-            category: "image",
-            tags: ["テーマカラー", "トンマナ調整"],
-            template: "赤枠で囲ったスマートフォン内のアプリのボタンやハイライト色を、現在の色から鮮やかな{新カラー}に変更してください。ブランドの新しいイメージカラーに合わせます。",
-            defaults: { "新カラー": "ディープバイオレット（#8B5CF6）" },
-            tip: "リブランディングや、クライアントごとのカスタマイズ画面を即座に作成できます。"
-          },
           4: {
-            title: "4. 【動画】アプリを使っている快適な動画",
+            title: "4. 【動画】口パク・手ぶりSaaS解説",
             category: "video",
-            tags: ["SaaS", "実用シーン", "縦長可"],
-            template: "日本のカフェの窓際で、笑顔でスマートフォンを操作する日本の女性.画面には日本語仕様の{アプリ名}が軽快に動いており、彼女がワンタップした瞬間に『お宝発見！』という爽快なグラフィックが浮かび上がる様子。クローズアップ、明るい陽光。",
-            defaults: { "アプリ名": "価値みっけAIアプリ" },
-            tip: "日常に溶け込むアプリの利便性をアピールし、SNS用動画やLPで高いクリック率を狙える動画素材です。"
-          },
-          5: {
-            title: "5. 【動画】データ処理の一瞬を可視化",
-            category: "video",
-            tags: ["データ変換", "モーフィング"],
-            template: "日本のオフィスにて、散らかった紙の日本語領収書やExcelのデータが、画面に入った瞬間に光の粒子へと変化し、整然とした美しい{ダッシュボード}へと再構築されるスピーディーな遷移動画。",
-            defaults: { "ダッシュボード": "3D売上分析グラフ" },
-            tip: "『面倒な業務が一気にスッキリする』というアプリのコアベネフィットを、直感的にユーザーの脳に刷り込みます。"
-          },
-          6: {
-            title: "6. 【動画】ロゴ×アプリ画面×操作する手元の融合",
-            category: "video",
-            tags: ["3枚フュージョン", "実演風"],
-            template: "（日本語のブランドロゴ、診断中のスマホ画面、操作する指元の3枚を使用）{ブランドロゴ}が端にスタイリッシュに配置された空間で、実際に診断結果が高速でスクロールされ、最後に『相性100%』と表示される一連のスマートな動画を生成。",
-            defaults: { "ブランドロゴ": "「みっけ」のブランドマーク" },
-            tip: "実際のアプリが動いている様子を、ブランドの統一イメージを壊さずに美しく融合できます。"
-          },
-          7: {
-            title: "7. 【動画】AIアバターによるプロダクトピッチ",
-            category: "video",
-            tags: ["プロダクトピッチ", "アバター"],
-            template: "ブルーのネオン光が走るテック調のスタジオ。スマートな日本の{開発者}アバターが、自信に満ちた表情で次のセリフを日本語で語りかける。『{ピッチ}』",
-            defaults: { "開発者": "男性プロダクトマネージャー", "ピッチ": "面倒なデータ分析は、もうAIに任せましょう。このツールを使えば、あなたの会社の『隠れた価値』を3クリックで見つけ出します。" },
-            tip: "デモ動画の解説役や、LP上での製品ピッチをAIに完全に自動化させることができます。"
-          },
-          8: {
-            title: "8. 【動画】プロモ動画用・最高画質4Kループ背景",
-            category: "video",
-            tags: ["4K", "アプリPV背景"],
-            template: "抽象的なブルーとバイオレットの3D光子線が、奥から手前へと滑らかに流れ続けるサーバー空間のイメージ。IT系製品発表会のメインスクリーンで流すための、ノイズの一切ない4Kプレミアム動画素材。",
-            defaults: {},
-            tip: "プロダクトのPVの背景や、展示会ブースの液晶モニターで流すのに適した最高峰のクオリティです。"
-          },
-          9: {
-            title: "9. 【動画】オフィス背景に「アプリ紹介ディスプレイ」追加",
-            category: "video",
-            tags: ["ディスプレイ挿入", "後付け"],
-            template: "日本のモダンオフィスの背景の壁に取り付けられているテレビモニターの中に、{動画コンテンツ}が綺麗に流れている様子を追加してください。斜めのアングルや光沢も完全に調和させること。",
-            defaults: { "動画コンテンツ": "「みっけシリーズ」の紹介PVアニメーション" },
-            tip: "ただのオフィス撮影動画を、自社プロダクトが常にアピールされている「自社専用オフィス動画」にリメイクできます。"
-          },
-          10: {
-            title: "10. 【動画】動画内のテストデータや社外秘の消去",
-            category: "video",
-            tags: ["モザイク不要", "クリーン削除"],
-            template: "日本のオフィスのパソコンのモニター上に映り込んでいる、{社外秘}を完全に消去して、シンプルで美しいグラデーションのデスクトップ壁紙に変更してください。",
-            defaults: { "社外秘": "日本語の顧客リストテストデータ" },
-            tip: "モザイクをかけると一気に素人っぽくなりますが、Flowなら元からなかったように綺麗に消せます。"
-          },
-          11: {
-            title: "11. 【動画】カメラポジション変更（スマホ目線マクロアングル）",
-            category: "video",
-            tags: ["マクロアングル", "没入感"],
-            template: "（カメラの位置：近づく／超マクロアングルを選択）日本のオフィスデスクの上に置かれたスマートフォンのディスプレイに、日本人クリエイターの指先が優しく触れ、{アプリグラフィック}が起動する瞬間をマクロアングルで変更。",
-            defaults: { "アプリグラフィック": "「価値みっけ」の日本語ロゴ" },
-            tip: "アプリのインストールボタンを押す瞬間など、ユーザーの「第一歩」を非常にドラマチックに見せます。"
-          },
-          12: {
-            title: "12. 【動画】カメラワーク変更（ドリーアウトから全景へ）",
-            category: "video",
-            tags: ["ドリーアウト", "スケール感"],
-            template: "（カメラの位置：ドリーアウト＆ズームアウトを選択）カフェで嬉しそうにタブレットを見つめる経営者のアップから、カメラがスーッと後退し、日本の洗練されたコワーキングスペースの全景へとスムーズに引いていく広角ワーク。",
-            defaults: { "立場": "中小企業経営者（日本人男性）" },
-            tip: "ツールがもたらす『自由で洗練されたライフスタイル』の広がりを、映像のダイナミックな引きで演出します。"
-          },
-          13: {
-            title: "13. 【動画】機能紹介スライド動画の結合",
-            category: "video",
-            tags: ["機能比較", "シーンビルダー"],
-            template: "「日本人経営者の手動での面倒な作業（Before）」「みっけAIを使った自動マッチング（Active）」「日本のオフィスでマッチング完了による驚きの笑顔（After）」の3動画をタイムラインに並べ、Flowのシーンビルダーでトリミングして12秒のテンポの良い比較広告を作成。",
-            defaults: {},
-            tip: "Instagram広告やTikTok広告にそのまま投下できる比較動画を爆速で作り上げます。"
-          },
-          14: {
-            title: "14. 【動画】新機能リリース発表用の大量クリップ案",
-            category: "video",
-            tags: ["ChatGPT連携", "リリースPR"],
-            template: "「AIアプリの『価値みっけSaaS』の新機能を日本の忙しい開発者や経営者に刺さるクリップとして紹介したい。Veo 3.1（Flow）で一発出力できる日本のテックオフィス背景の英語プロンプトを15個一括生成して。登場人物は日本人エンジニア。」",
-            defaults: {},
-            tip: "新機能リリース前の貴重な時間を無駄にせず、1クリックで大量の動画アセットを用意できます。"
-          },
-          15: {
-            title: "15. 【動画】「みっけ」を使って起業家が覚醒するストーリー",
-            category: "video",
-            tags: ["起業家覚醒", "5カット"],
-            template: "【Flow5カット連動】\nカット1: {起業家}が日本のカフェの机でアイデアノートを前に、暗い顔で悩んでいる\nカット2: 日本人起業家がスマホで日本語の『みっけツール』のLPを発見し、目に光が戻る\nカット3: 日本語のツール上で診断ボタンを押すと、自分の技術が数百万の補助金価値にマッチした画面が表示される\nカット4: 日本人起業家が自信に満ちた顔で、日本のオフィスで新しい仲間とハイタッチをする\nカット5: ビルの屋上で、日本の青空に向かって『みっけ』アプリの画面を掲げる、誇らしげな後ろ姿",
-            defaults: { "起業家": "20代の日本の若手起業家男性" },
-            tip: "プロダクトのファン化、および『自分もこうなりたい』という共感を最高潮に高めるストーリー動画です。"
+            aspect: "9:16",
+            tags: ["画像から開始", "口パク", "手ぶり"],
+            template15: "（アップロードした日本の開発者男性の画像から開始）日本の開発者が、自信と親しみやすさに満ちた笑顔でカメラに語りかける。スマートな手ぶりを交えながら、次の日本語セリフを話し、リップシンクを完全に合わせること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese developer image) A Japanese app developer speaks to the camera with a confident, reassuring smile, gesturing naturally with modern open-palm gestures. Perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:データ課題の提起]\n（アップロードした開発者画像から開始）タブレットを片手に持ち、少し真剣な表情で、手振りを交えながら業務効率化の重要性を語る。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:AIマッチングの解決]\n画面を示しながら満面の笑顔になり、アプリの使いやすさを手振りを交えて明るく紹介。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: App Challenge]\n(Starting from the uploaded Japanese developer image) Holding a tablet, gesturing with a serious yet empathetic face about office inefficiencies. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: matching solution]\nHis expression shifts to a happy, satisfied smile, presenting the dashboard on the phone screen with polite, fluid hand gestures. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み共感]\n（アップロードした開発者画像から開始）「面倒なExcel作業やデータ照合に、毎日時間を取られていませんか？」と親身に手振りを交えて問題提起。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:みっけツールの革新性]\nタブレットをトントンと指さしながら、AIマッチングの速さを身ぶり手ぶりを大きく交えて嬉しそうに熱弁。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:お試し呼びかけ]\n最後はカメラに向かって頼もしく頷きながら一礼。簡単にお試しできる魅力を笑顔でジェスチャー紹介。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Complexity empathy]\n(Starting from the uploaded Japanese developer image) Empathizing with heavy administrative overhead, gesturing supportively to the viewer with perfect lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: matching innovation]\nPointing excitedly at the matching rate pop-up displayed on the screen with dynamic, friendly hand movements. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: CTA invitation]\nNodding reassuringly with a welcoming gesture, bowing politely with an optimistic smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            defaults: {
+              "セリフ15": "面倒なデータ分析はもう不要！このアプリを使えば、自社の『隠れた価値』が3タップで見つかります！",
+              "セリフ30_1": "「補助金や融資、自社に合う制度が多すぎて選べない…」そう悩んでいませんか？情報の海で迷うのはもう終わりです。",
+              "セリフ30_2": "『マッチングみっけAI』なら、簡単な条件を入れるだけで、受給可能性の高い制度を一瞬で自動検出します！",
+              "セリフ60_1": "毎日増え続ける社内データ。その中にある『本当の強み』や『お宝情報』、実は見落とされていませんか？",
+              "セリフ60_2": "私たちの新しいSaaSツールは、独自のAIアルゴリズムが隠れたお宝（マッチデータ）を自動抽出し、瞬時にスコアリングします。",
+              "セリフ60_3": "開発者の私たちSmile Plusが、導入から運用まで完全に伴走。まずは無料診断で、その圧倒的な速さを体験してください！"
+            },
+            tip: "操作画面のモックとアバターをアップロードして動画化することで、新機能リリースのPRリール動画などが外注費ゼロで毎日量産可能になります。"
           }
         }
       },
@@ -715,122 +640,33 @@
           1: {
             title: "1. 【画像】ブランドの世界観・キービジュアル",
             category: "image",
+            aspect: "16:9",
             tags: ["スキンケア", "透明感", "オーガニック"],
             template: "透明感あふれる潤った素肌の日本人女性（20代後半）。手元には{コスメ素材}が並び、柔らかな自然光が差し込むシンプルな白い洗面台.ナチュラルな朝の雰囲気、シネマティックで洗練された高級オーガニックコスメ広告調、超高画質。",
+            templateEn: "A close-up of a Japanese female model (20s) with glowing, radiant, hydrated skin, gently touching her cheek. Premium '{コスメ素材}' bottles placed neatly on a modern vanity. Nordic clean aesthetic, soft volumetric morning light, photorealistic.",
             defaults: { "コスメ素材": "ガラス容器に入った黄金色のオーガニック美容液" },
             tip: "ブランドイメージの統一感、ラグジュアリーでありながら自然体な美しさを一発で表現します。"
           },
-          2: {
-            title: "2. 【画像】モデルの手元に製品ボトルを合成",
-            category: "image",
-            tags: ["ボトル追加", "自然な影"],
-            template: "赤枠で囲った日本人女性モデルの両手の間に、{ボトルデザイン}を違和感なく追加してください。ボトルのガラスの反射と、指がボトルに触れている影を非常に繊細に描写すること。",
-            defaults: { "ボトルデザイン": "すりガラスでできた高級感のある美容液ボトル" },
-            tip: "既存のモデル素材を活用しながら、自社の新商品を驚くほど自然に手元に持たせることができます。"
-          },
-          3: {
-            title: "3. 【画像】アイシャドウ・リップの新色カラーチェンジ",
-            category: "image",
-            tags: ["カラーチェンジ", "コスメ比較"],
-            template: "赤枠で囲った日本人女性モデルのまぶたのアイシャドウの色、および唇のリップのカラーを、今シーズンの新色である{指定カラー}に変更してください。パールのツヤ感や日本の肌に馴染むテクスチャーは一切損なわないこと。",
-            defaults: { "指定カラー": "上品なシアーテラコッタ（#C25A3F）" },
-            tip: "一人のモデルで10色のカラーバリエーション画像を、撮影コストゼロ・完全同一アングルで作成可能です。"
-          },
           4: {
-            title: "4. 【動画】スキンケアの使用ルーティン動画",
+            title: "4. 【動画】口パク・手ぶりルーティン解説",
             category: "video",
-            tags: ["ルーティン", "シネマティック", "縦長"],
-            template: "（縦長動画）朝の明るい洗面台。日本の女性が、手のひらにとった透明な{美容液}を優しく頬にプレスしてなじませる様子。肌が潤いでみずみずしく輝く瞬間。美しいスローモーション、清潔感あふれる光、水滴のリアリティ。",
-            defaults: { "美容液": "一滴のきらめくオイル美容液" },
-            tip: "InstagramリールやTikTokで絶大な効果を発揮する、肌の『ツヤ・透明感』を視覚で感じさせる極上クリップです。"
-          },
-          5: {
-            title: "5. 【動画】メイクアップによる劇的変化",
-            category: "video",
-            tags: ["変化補完", "ビフォーアフター"],
-            template: "メイクをしていない、少し{肌悩み}のある女性のすっぴんの素肌から、ファンデーションをふわっと滑らせるだけで、肌が内側からパッと発光するような極上のツヤ肌へモーフィングしながら変化していく、シネマティックな変化プロセス動画。",
-            defaults: { "肌悩み": "頬の軽い赤みやくすみ" },
-            tip: "すっぴん画像とメイク後画像をFlowで滑らかに繋ぐことで、嘘偽りのない『憧れの変化プロセス』を動画で見せられます。"
-          },
-          6: {
-            title: "6. 【動画】3枚素材融合（モデル×オーガニック背景）",
-            category: "video",
-            tags: ["一貫性フュージョン", "自然素材"],
-            template: "（アップロードしたモデル女性、自社の美容液ボトル、みずみずしい緑のハーブ畑の3枚を使用）{モデル}がボトルをそっと頬に寄せ、緑豊かな自然の風に吹かれて心地よさそうに微笑む、一貫性のある美しいブランドPR動画を生成。",
-            defaults: { "モデル": "透明感のある日本の女性" },
-            tip: "スタジオ撮影のモデルと、オーガニックな背景、飾らない商品をFlowで一体化させた最高品質の動画が完成します。"
-          },
-          7: {
-            title: "7. 【動画】美容アドバイザーによる商品説明",
-            category: "video",
-            tags: ["アドバイザー", "唇シンク"],
-            template: "白を基調とした、清潔感のあるビューティースタジオ。上品な制服を着た日本の{アドバイザー}が、笑顔で日本のカメラに日本語で語りかける。『{商品説明}』",
-            defaults: { "アドバイザー": "女性スキンケアアドバイザー（30代）", "商品説明": "マスク荒れや乾燥にお悩みの方へ。この一本で、翌朝の肌が見違えるように生まれ変わります。" },
-            tip: "プロのアドバイザーによるレビュー動画風コンテンツを、AIアバターでスマートに量産します。"
-          },
-          8: {
-            title: "8. 【動画】公式EC・大画面用の4K水滴シズル動画",
-            category: "video",
-            tags: ["4K", "シズル感", "物撮り"],
-            template: "pinkの薔薇の花びらの上で、一滴の美容液がゆっくりと転がり落ちるスローモーション.水の屈折、光の反射が極限までリアルに描写された4K超高画質アップスケール動画。日本の高級ラグジュアリーコスメの演出。",
-            defaults: {},
-            tip: "ECサイトのトップページやブランドのコンセプトムービーに、世界観の説得力を与えるための高精細動画です。"
-          },
-          9: {
-            title: "9. 【動画】バスルームに高級キャンドルを追加",
-            category: "video",
-            tags: ["シチュエーション追加", "クレジット0"],
-            template: "日本の浴室の縁の空きスペースに、{インテリア}を追加してください。キャンドルの炎が日本のバスルームを優しく揺らめき、温かい光が周囲の壁に反射していること。",
-            defaults: { "インテリア": "ガラスの器に入った、ほのかに灯るアロマキャンドル" },
-            tip: "何気ないお風呂のシーンに、ラグジュアリーなリラックス空間の付加価値をプラスできます。"
-          },
-          10: {
-            title: "10. 【動画】ブランドイメージを壊す生活感の消去",
-            category: "video",
-            tags: ["クリーンアップ", "不要物カット"],
-            template: "日本の洗面台の背景に映り込んでいる、{生活感}を完全に消去して、ホテルのような真っ白で高級感のある大理石의壁に変更してください。",
-            defaults: { "生活感": "市販の歯ブラシセットや色とりどりのプラスチック容器" },
-            tip: "動画撮影時にどうしても写ってしまう『日本の家庭の生活感』を消し去り、ブランド価値を守ります。"
-          },
-          11: {
-            title: "11. 【動画】カメラポジション変更（真上からの美容オイル滴下）",
-            category: "video",
-            tags: ["真上アングル", "シズルマクロ"],
-            template: "（カメラの位置：上から近づくアングルに変更）透明なトレイに敷き詰められた{美容素材}の中心に向かって、黄金色のオイルが一滴落ち、波紋が美しく広がる様子を、垂直の真上からクローズアップで捉えた映像に変更。日本のビューティーサロンの演出。",
-            defaults: { "美容素材": "pinkのローズペタル" },
-            tip: "コスメPRの王道である、マテリアル（美容液の質感や色）の美しさを強調するアングルを演出します。"
-          },
-          12: {
-            title: "12. 【動画】カメラワーク変更（回るようにリップを映す）",
-            category: "video",
-            tags: ["回り込み", "3D感"],
-            template: "（カメラワーク：rightに滑らかに回り込むを選択）日本の高級な大理石の上に立たせて置かれた、ゴールドの{コスメ容器}を中心に、カメラが滑らかに時計回りに旋回し、ロゴが美しくきらめくシネマティックなカメラワークに変更。",
-            defaults: { "コスメ容器": "ブランドロゴが刻印されたリップスティック" },
-            tip: "プロのカメラマンがレールを使って撮影したかのような、重厚感のある物撮りカットを再現します。"
-          },
-          13: {
-            title: "13. 【動画】プロモ動画用の音楽合わせカット編集",
-            category: "video",
-            tags: ["シーン結合", "テンポ編集"],
-            template: "日本の女性クリエイターが登場する「日本のスキンケア、美容液を手に取る」「日本の女性が肌に塗って笑顔になる」「日本の朝の陽光の中で自信満々に出かける」の3クリップをFlowのシーンビルダーで結合。音楽のテンポに合わせ、それぞれ4秒ずつの綺麗な12秒PVを作成。",
-            defaults: {},
-            tip: "複数のカットを繋ぎ、ブランドの持つ『心地よい一日のストーリー』を1本で表現します。"
-          },
-          14: {
-            title: "14. 【動画】新商品発表会のためのSNS動画大量プロンプト",
-            category: "video",
-            tags: ["大量量産", "ChatGPT連携"],
-            template: "「新発売の無添加クレンジングオイルの魅力を、日本の女性ユーザーが思わず手を止める、みずみずしくて洗練された映像アイデア12個を、日本の情緒背景でFlow（Veo 3.1）用に一括生成して。日本語モデル推奨。」",
-            defaults: {},
-            tip: "SNSの投稿スケジュールを完全に埋めるだけの高品質なコスメクリップを、1日の作業で量産可能です。"
-          },
-          15: {
-            title: "15. 【動画】自信がなくてうつむいていた女性がメイクで輝くストーリー",
-            category: "video",
-            tags: ["変身ストーリー", "5カット"],
-            template: "【Flow5カット連動】\nカット1: {女性}が鏡の前で、日本の洗面台でくすんだ肌を見て少し寂しそうにため息をつく様子\nカット2: 日本人女性が自社のスキンケアオイルのボトルをそっと開け、一滴を指先に落とす様子\nカット3: 日本人女性の頬にオイルを馴染ませると、肌がどんどん潤い、透明感を取り戻していくクローズアップ\nカット4: メイクが完成し、鏡の中の自分に向かって、満面の笑みでウインクをする日本人女性の様子\nカット5: 風に髪をなびかせながら、自信に満ちた表情で都会のオフィス街を颯爽と歩く後ろ姿",
-            defaults: { "女性": "都会で働く少しお疲れ気味の20代日本人女性" },
-            tip: "『ただのコスメ売り』から『お客様の人生を変えるブランド』へと格上げするためのエモーショナルなストーリーです。"
+            aspect: "9:16",
+            tags: ["画像から開始", "口パク", "手ぶり"],
+            template15: "（アップロードした日本のビューティーモデル画像から開始）潤い肌の日本人女性モデルが、優しい笑顔でカメラに向かって語りかける。美容液ボトルを手に取り、優しく撫でるような手振りのジェスチャー。完璧なリップシンク。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese model image) A Japanese beauty model with glowing skin talks to the camera with a gentle, beautiful smile, supportively holding the cosmetic bottle. Natural hand gestures. Perfectly synchronized lip-sync: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:肌悩みへのアプローチ]\n（アップロードしたモデル画像から開始）すっぴんの美しさについて、親身に頷きながら手振りで優しく頬を包み込むように語りかける。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:ツヤ感の喜び]\nボトルを開けて、一滴を指先に落とし、嬉しそうにツヤをカメラに見せる。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Skin worry]\n(Starting from the uploaded Japanese model image) Gently gesturing to her cheek with a empathetic, calm smile. Perfectly synchronized lip-sync matching: \"{セリフ30_1}\"\n\n[Scene 2: Glowing skin]\nOpening the bottle, dropping a single golden drop on her finger, and looking at the camera with a happy, radiant smile. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:スキンケアの課題]\n（アップロードしたモデル画像から開始）「季節の変わり目、お肌の乾燥に悩まされていませんか？」と、落ち着いた語りかけ。優しい手の動き。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:無添加オイルの潤い]\n美容液ボトルを頬に優しくあてて、その心地よさを手振りを大きく交えながら、うっとりするような笑顔で熱弁。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:毎日のルーティンへの招待]\n最後は両手でハートマークをそっと作り、極上の笑顔で明日のお肌への期待を語る。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: routine challenge]\n(Starting from the uploaded Japanese model image) Addressing seasonal skin dryness with empathetic head tilts and comforting hand gestures. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Natural hydration]\nGently applying the serum, showing her glowing, hydrated cheek with a beautiful, gesturing smile. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Invitation]\nMaking a gentle heart gesture with both hands, smiling brightly, and showing off her beautiful glowing skin with a soft nod. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            defaults: {
+              "セリフ15": "お肌の乾燥、もう気にしたくないですよね。この一滴で、明日の朝お肌がふっくらと生まれ変わります！",
+              "セリフ30_1": "「色々スキンケアを試したけれど、時間が経つと乾燥する…」そう感じたことはありませんか？",
+              "セリフ30_2": "この無添加オーガニックオイルなら、お肌の奥深くまで潤いを閉じ込めて、一日中もっちりツヤ肌をキープします！",
+              "セリフ60_1": "「最近、メイクのノリがなんとなく悪いかも…」そう感じたら、お肌の水分補給のサインかもしれません。",
+              "セリフ60_2": "私たちの『ツヤみっけ美容液』は、厳選された大自然のハーブ成分だけで作られた、敏感肌にも優しい高保湿オイルです。",
+              "セリフ60_3": "考えるを、一人にしない。毎日のスキンケアタイムを、ご自身を労わる極上の癒し時間に変えてみませんか？"
+            },
+            tip: "モデル画像と新商品のボトル画像をアップロードして動かすことで、InstagramリールやTikTok用の極めてシズル感のあるコスメPR動画が完成します。"
           }
         }
       },
@@ -842,122 +678,34 @@
           1: {
             title: "1. 【画像】職人魂・ものづくりの一瞬",
             category: "image",
+            aspect: "16:9",
             tags: ["職人", "技術", "シネマティック"],
             template: "日本の{場所}で、真剣な眼差しで{作業}を行う、ねじり鉢巻をしたベテランの日本人職人（60代男性）。手元の精密な動き、木屑や金属の火花がうっすらと舞うシネマティックな空気感、温かみのあるオレンジの照明、超高画質。",
+            templateEn: "A cinematic medium shot of a master Japanese wooden artisan (60s) shaping wood carefully with a hand planer in a traditional woody workshop. Fine wood shavings flying in the air, warm backlight, epic atmosphere, photorealistic.",
             defaults: { "場所": "伝統的な家具の木工工房", "作業": "カンナで木材を丁寧に削る作業" },
             tip: "会社のホームページや採用ページに掲載するだけで、歴史と確固たるプライド（信頼性）が伝わる写真です。"
           },
-          2: {
-            title: "2. 【画像】既存の工場画像へ安全設備を自然に追加",
-            category: "image",
-            tags: ["工場安全", "コンプライアンス"],
-            template: "赤枠で囲った工場内の機械の側面に、{安全マーク}を違和感なく追加してください。鉄の質感や周囲の油の汚れに馴染ませること。",
-            defaults: { "安全マーク": "『安全第一』と書かれた黄色の警告プレート" },
-            tip: "撮影時にはなかったコンプライアンス表記やロゴマークを、撮影し直すことなく後付けできます。"
-          },
-          3: {
-            title: "3. 【画像】作業服・ユニフォームの色変更",
-            category: "image",
-            tags: ["ユニフォーム", "イメージ変更"],
-            template: "赤枠で囲った日本人スタッフの作業服の色を、現在の灰色から、新しく制定した{新カラー}に変更してください。胸の日本語ロゴマークは変えないこと。",
-            defaults: { "新カラー": "鮮やかなネイビーブルー（#1E3A8A）" },
-            tip: "ユニフォーム刷新の事前イメージ共有や、社内報、HPのスタッフ写真の更新に非常に便利です。"
-          },
           4: {
-            title: "4. 【動画】ものづくり企業の魅力発信PV",
+            title: "4. 【動画】口パク・手ぶり代表メッセージ",
             category: "video",
-            tags: ["職人の技", "シズル感", "スロー"],
-            template: "（横長シネマティック）日本の町工場の薄暗い作業場。オレンジ色の美しい火花を散らしながら、真剣な眼差しで{職人作業}を行う熟練の日本人職人。火花がカメラに向かって散るスローモーション。技術の尊さを伝えるドラマチックな映像。",
-            defaults: { "職人作業": "溶接作業を行う日本の職人" },
-            tip: "SNSでの認知拡大やリクルート動画として、求職者の心を強く引きつけるエモーショナルな動画です。"
-          },
-          5: {
-            title: "5. 【動画】老朽化から新築・リフォームの劇的変化",
-            category: "video",
-            tags: ["リフォーム", "ビフォーアフター"],
-            template: "古い昭和風の日本の和室（Before）から、壁や床がパタパタと小気味よく組み替わり、一瞬でモダンな{アフター住宅}（After）へと劇的にリフォームされていく建築遷移アニメーション動画。",
-            defaults: { "アフター住宅": "吹き抜けと天然木の香りが漂う日本の北欧モダンなリビング" },
-            tip: "工務店やリフォーム会社のHPトップに置くだけで、劇的な提案力・設計力を直感的にアピールできます。"
-          },
-          6: {
-            title: "6. 【動画】3枚素材融合（職人×製品×和風背景）",
-            category: "video",
-            tags: ["職人フュージョン", "3枚合成"],
-            template: "（日本の熟練職人の顔、手作りの南部鉄器、美しい日本の庭園の3枚を使用）{職人}が、完成した鉄器を誇らしげに見つめて、穏やかに微笑んでいる様子をシームレスに融合して生成。和の静けさと品格が漂う極上PR映像。",
-            defaults: { "職人": "和服を着た高齢の日本の名工" },
-            tip: "『誰が、どんな想いで、どこで作っているか』をたった数枚の静止画アセットから一本の動画に再構成します。"
-          },
-          7: {
-            title: "7. 【動画】社長の経営理念AIメッセージ",
-            category: "video",
-            tags: ["経営理念", "アバタートーク"],
-            template: "日本の温かみのある木の壁でできた応接間。ネクタイを締めた日本の{経営者}が、笑顔で、しかし力強い眼差しでカメラに向かって日本語で語りかける。『{メッセージ}』",
-            defaults: { "経営者": "地域に根ざした工務店の社長（50代男性）", "メッセージ": "家づくりは、家族の未来づくり。私たちは、一棟一棟に心を込めて、100年住み続けられる頑丈な家を造り続けます。" },
-            tip: "社長自ら撮影する時間がなくても、ホームページ上で経営理念を熱く伝える動画を即座に掲載できます。"
-          },
-          8: {
-            title: "8. 【動画】展示会ブース用の4K製品製造ループ",
-            category: "video",
-            tags: ["4K", "展示会用", "精密"],
-            template: "日本の精密な町工場の旋盤が、超高速で金属をミリ単位で削り出し、美しい円筒状のネジ部品を完成させるクローズアップ。4K高画質アップスケーラーに最適化された、切削油の輝きと金属光沢が鮮明なプレミアム映像素材。",
-            defaults: {},
-            tip: "展示会ブースでループ再生することで、技術力の高さを来場者に一目でアピールできます。"
-          },
-          9: {
-            title: "9. 【動画】工房の壁に自社の看板・ロゴを後付け",
-            category: "video",
-            tags: ["看板合成", "オブジェクト追加"],
-            template: "木造工房の入り口の壁に、{看板デザイン}を自然に挿入してください。古い木肌に馴染むように、影と質感を調整すること。",
-            defaults: { "看板デザイン": "『創業大正十年 匠工務店』と刻印された日本語の木彫り看板" },
-            tip: "ただの一般の風景動画を、自社の社名やロゴが入った『完全オリジナル映像』へと即座に昇華させます。"
-          },
-          10: {
-            title: "10. 【動画】動画内に映り込んだ関係ない看板やゴミの消去",
-            category: "video",
-            tags: ["クリーンアップ", "クレジット0"],
-            template: "日本の下町の店舗の前の道路に置いてある、{不要物}を綺麗に消去して、すっきりとしたアスファルトの地面に変えてください。",
-            defaults: { "不要物": "放置された日本語コーン看板と散らかった小さなプラスチックのゴミ" },
-            tip: "撮影した動画に写ってしまった他社の看板や、ゴミ箱など、生活感溢れる不要なノイズを完全にクリアにします。"
-          },
-          11: {
-            title: "11. 【動画】カメラポジション変更（職人の手元マクロアングル）",
-            category: "video",
-            tags: ["手元マクロ", "職人技"],
-            template: "日本の職人が木材にノミを立てて、コンッと優しく金槌で叩き、{削る一瞬}を、ノミの刃先すれすれの極めて至近距離から捉えた日本の工房のマクロアングルに変更。",
-            defaults: { "削る一瞬": "美しいカンナ屑がカールしながら剥がれる一瞬" },
-            tip: "職人の『ミリ単位の超絶技法』を、言葉ではなく映像の緊迫感とディテールで伝えます。"
-          },
-          12: {
-            title: "12. 【動画】カメラワーク変更（ドリーアウト、職人から工場全景へ）",
-            category: "video",
-            tags: ["ドリーアウト", "工場全景"],
-            template: "（カメラの位置：ドリーアウト＆ズームアウトを選択）日本の町工場で黙々と作業する日本の若手職人の手元から、カメラが滑らかに後退し、{工場内}で多くの日本人職人が活気を持って作業している工場全体の様子を見渡す広角アングルに変更。",
-            defaults: { "工場内": "高い天井から光が差し込む広大な工場" },
-            tip: "個人の作業から、会社全体のチームワークやスケール感へと視点を大きく広げるドラマチックな演出です。"
-          },
-          13: {
-            title: "13. 【動画】SNS求人用リクルート動画の作成",
-            category: "video",
-            tags: ["採用動画", "シーン結合"],
-            template: "日本のスタッフが登場する「日本の朝、笑顔で出社して挨拶」「日本のベテランから優しく技術指導を受けるシーン」「日本人スタッフみんなでお弁当を食べて談笑」の3つの動画をFlowのシーンビルダーで結合。タイムライントリミングを駆使して、15秒の『アットホームな日本の求人動画』を完成。",
-            defaults: {},
-            tip: "動画編集ソフトを使うことなく、求職者が最も見たい『社内の人間関係や温かさ』を伝える動画を完成させます。"
-          },
-          14: {
-            title: "14. 【動画】ローカルメディア掲載用の一括プロンプト生成",
-            category: "video",
-            tags: ["ChatGPT連携", "メディアPR"],
-            template: "「日本の地方の老舗味噌蔵が、若者向けの新商品を開発した。日本の情緒背景で、味噌作りの工程動画15個を、Veo 3.1（Flow）で一発出力できる日本語のプロンプトでコピペ出力して。」",
-            defaults: {},
-            tip: "メディア取材時や、地元の物産展のPRなどで急遽必要になった動画素材を即時でカバーします。"
-          },
-          15: {
-            title: "15. 【動画】家づくりから始まる、ある家族の20年ストーリー",
-            category: "video",
-            tags: ["20年ストーリー", "5カット"],
-            template: "【Flow5カット連動】\nカット1: {夫婦}が笑顔で、日本の青空の下の土地の地鎮祭の様子\nカット2: 日本人の木工職人が大黒柱を丁寧に組み立てている日本の建築現場の様子\nカット3: 完成した日本の木の家の中で、日本の幼い子供が走り回り、夫婦が幸せそうに見つめているリビング\nカット4: 20年が経ち、立派な大人になった日本の子供が、同じリビングで笑顔で日本語のアルバムを開いている様子\nカット5: 味わい深い色合いに経年変化した天然木の日本の家を背景に、日本人家族全員が並んで記念撮影をしている様子",
-            defaults: { "夫婦": "20代の日本の若い夫婦" },
-            tip: "『私たちはただの家ではなく、家族の歴史を創っている』という圧倒的な感動とブランド価値を伝える最高傑作です。"
+            aspect: "9:16",
+            tags: ["画像から開始", "口パク", "手ぶり"],
+            template15: "（アップロードした工務店の日本の{立場}の画像から開始）ねじり鉢巻をした日本の{立場}が、温かい職人魂を感じる笑顔でカメラに語りかける。逞しい手振りのジェスチャー。完璧なリップシンク。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese craftsman image) A Japanese {立場} with a hachimaki headband speaks directly to the camera with a warm, passionate smile, gesturing with natural hand movements. Perfectly synchronized lip-sync: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:職人のこだわり]\n（アップロードした職人画像から開始）自慢の製品や木材を手振りで優しく撫でながら、日本の技術のこだわりを真剣な表情で語りかける。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:温かい呼びかけ]\n笑顔になり、力強く拳を握りしめ（手振りジェスチャー）、安心のアフターサポートを約束する。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Passionate talk]\n(Starting from the uploaded Japanese craftsman image) Gesturing with his hands toward a wooden masterwork, explaining quality with pride. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Trust guarantee]\nTransitioning to a proud smile, making an encouraging fist gesture to emphasize our lifetime warranty. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:伝統と挑戦]\n（アップロードした職人画像から開始）「家は、買うものではなく、家族と一緒に育てるものです。」と、穏やかに頷きながら優しく手振り語りかける。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:匠みっけAI診断]\nタブレットでマッチした図面を示しながら、最先端技術（マッチング）と職人技の融合を大きく手振り解説。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:末長いお約束]\n最後はカメラに向かって力強く胸を叩いて、誇らしい笑顔と深々とした一礼。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy talk]\n(Starting from the uploaded Japanese craftsman image) Speaking warmly about family growth and home durability with natural hand gestures and nods. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Innovation matching]\nHolding up a blueprint, gesturing dynamically to explain how modern match tools combine with traditional values. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Trusted Bow]\nPatting his chest proudly with a big confident smile, concluding with a respectful bow toward the camera. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            defaults: {
+              "立場": "職人棟梁（日本人男性）",
+              "セリフ15": "一棟一棟、我が子を育てるように心を込めて。100年住み続けられる頑丈な家を、私たちが造り続けます！",
+              "セリフ30_1": "「一生に一度の家づくり、本当に信頼できる工務店に出会えていますか？」私たちは、数字だけの家は造りません。",
+              "セリフ30_2": "一本の木材のクセを見極め、長年の『職人の技』で、地震に負けない頑強な骨組みを手作業で組み立てます！",
+              "セリフ60_1": "「家を建てた後、どんな暮らしが待っているのかな…」その夢を、私たちに聞かせてください。私たちはご家族の未来を造っています。",
+              "セリフ60_2": "この『匠みっけシミュレーション』なら、ご希望の間取りから、最適な耐震強度と自然素材のバランスをAIと職人が一瞬で診断します。",
+              "セリフ60_3": "考えるを、一人にしない。地元の頼れる大工として、建てた後もずっとあなたの家に寄り添い続けます。ぜひ無料相談へお越しください！"
+            },
+            tip: "職人の作業中の顔写真をアップロードして動かすことで、アットホームで本物のプライドが伝わるリクルート・求人動画や代表メッセージが数分で作れます。"
           }
         }
       }
@@ -970,6 +718,10 @@
     let customValues = {};
     let favorites = [];
     let searchQuery = '';
+    
+    // Default sub-states for upgraded version
+    let activeLang = 'jp'; // 'jp' or 'en'
+    let activeDuration = '15'; // '15', '30', '60'
 
     // Initialize UI
     function init() {
@@ -1007,7 +759,7 @@
     // Set active industry
     function setIndustry(key) {
       activeIndustry = key;
-      selectedPromptId = 1;
+      selectedPromptId = activeTab === 'image' ? 1 : 4; // Video default starts at 4
       
       // Load current defaults
       const currentPrompt = PROMPT_DATABASE[activeIndustry].prompts[selectedPromptId];
@@ -1021,7 +773,7 @@
     // Set active tab (image/video)
     function setTab(tab) {
       activeTab = tab;
-      selectedPromptId = 1;
+      selectedPromptId = tab === 'image' ? 1 : 4; // Video default starts at 4
       
       // Update Tab UI styles
       const tabImg = document.getElementById('tab-image');
@@ -1062,6 +814,7 @@
         const matchesSearch = searchQuery === '' || 
           p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.template.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (p.template15 && p.template15.toLowerCase().includes(searchQuery.toLowerCase())) ||
           p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
         
         if (matchesTab && matchesSearch) {
@@ -1109,16 +862,70 @@
       renderWorkspace();
     }
 
-    // Generate current customized text
+    // Select dynamic template based on lang and duration settings
     function getProcessedPromptText() {
       const p = PROMPT_DATABASE[activeIndustry].prompts[selectedPromptId];
       if (!p) return '';
-      let text = p.template;
+      
+      let text = '';
+      if (p.category === 'image') {
+        text = activeLang === 'jp' ? p.template : p.templateEn;
+      } else {
+        // Video templates are fully split into 15s / 30s / 60s
+        if (activeLang === 'jp') {
+          if (activeDuration === '15') text = p.template15;
+          else if (activeDuration === '30') text = p.template30;
+          else text = p.template60;
+        } else {
+          if (activeDuration === '15') text = p.templateEn15;
+          else if (activeDuration === '30') text = p.templateEn30;
+          else text = p.templateEn60;
+        }
+      }
+
       Object.keys(customValues).forEach(key => {
         const val = customValues[key] || `[${key}]`;
         text = text.split(`{${key}}`).join(val);
       });
       return text;
+    }
+
+    // Language Toggle
+    function setLanguage(lang) {
+      activeLang = lang;
+      
+      const btnJp = document.getElementById('lang-jp');
+      const btnEn = document.getElementById('lang-en');
+      
+      if (lang === 'jp') {
+        btnJp.className = "px-3 py-1.5 rounded-lg text-xs font-black bg-brand-500 text-white shadow-sm";
+        btnEn.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
+      } else {
+        btnEn.className = "px-3 py-1.5 rounded-lg text-xs font-black bg-brand-500 text-white shadow-sm";
+        btnJp.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
+      }
+      
+      renderWorkspace();
+    }
+
+    // Duration Toggle
+    function setDuration(duration) {
+      activeDuration = duration;
+      
+      const btn15 = document.getElementById('dur-15');
+      const btn30 = document.getElementById('dur-30');
+      const btn60 = document.getElementById('dur-60');
+      
+      btn15.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
+      btn30.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
+      btn60.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
+      
+      const activeStyle = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm";
+      if (duration === '15') btn15.className = activeStyle;
+      else if (duration === '30') btn30.className = activeStyle;
+      else btn60.className = activeStyle;
+      
+      renderWorkspace();
     }
 
     // Render Workspace Right Area
@@ -1134,16 +941,32 @@
       const processedText = getProcessedPromptText();
       const isFav = favorites.includes(`${activeTab}_${activeIndustry}_${selectedPromptId}`);
 
-      // Render custom input forms
+      // Filter input variables currently in active template
+      const currentTemplate = p.category === 'image' 
+        ? (activeLang === 'jp' ? p.template : p.templateEn)
+        : (activeLang === 'jp' 
+            ? (activeDuration === '15' ? p.template15 : (activeDuration === '30' ? p.template30 : p.template60))
+            : (activeDuration === '15' ? p.templateEn15 : (activeDuration === '30' ? p.templateEn30 : p.templateEn60))
+          );
+
       let customFieldsHTML = '';
-      if (Object.keys(customValues).length > 0) {
+      const variablesInUse = [];
+      if (p.defaults) {
+        Object.keys(p.defaults).forEach(key => {
+          if (currentTemplate && currentTemplate.includes(`{${key}}`)) {
+            variablesInUse.push(key);
+          }
+        });
+      }
+
+      if (variablesInUse.length > 0) {
         customFieldsHTML = `
           <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
             <div class="text-xs font-black text-emerald-600 uppercase tracking-wider">
               ⚙️ プロンプトのカスタムパラメータ <span class="text-[10px] text-slate-400 font-normal">(値を入力すると自動で命令が変化します)</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              ${Object.keys(customValues).map(key => `
+              ${variablesInUse.map(key => `
                 <div class="space-y-1">
                   <label class="block text-[11px] font-bold text-slate-500">${key}</label>
                   <input
@@ -1181,6 +1004,28 @@
           </div>
         </div>
 
+        <!-- Language / Duration Advanced Controllers -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <!-- Translation Switch -->
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold text-slate-500">🌐 出力言語:</span>
+            <div class="flex bg-slate-200/60 p-1 rounded-xl">
+              <button id="lang-jp" onclick="setLanguage('jp')" class="${activeLang === 'jp' ? 'px-3 py-1.5 rounded-lg text-xs font-black bg-brand-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800'} transition-all">日本語版</button>
+              <button id="lang-en" onclick="setLanguage('en')" class="${activeLang === 'en' ? 'px-3 py-1.5 rounded-lg text-xs font-black bg-brand-500 text-white shadow-sm' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800'} transition-all">英語版 (Flow推奨)</button>
+            </div>
+          </div>
+          
+          <!-- Duration Switch (Only visible for Video) -->
+          <div class="flex items-center space-x-2 ${p.category === 'video' ? '' : 'opacity-30 pointer-events-none'}" id="dur-ctrl-wrapper">
+            <span class="text-xs font-bold text-slate-500">⏱️ 動画の長さ (Veo連動):</span>
+            <div class="flex bg-slate-200/60 p-1 rounded-xl">
+              <button id="dur-15" onclick="setDuration('15')" class="${activeDuration === '15' ? 'px-3.5 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm' : 'px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800'} transition-all">15秒</button>
+              <button id="dur-30" onclick="setDuration('30')" class="${activeDuration === '30' ? 'px-3.5 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm' : 'px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800'} transition-all">30秒</button>
+              <button id="dur-60" onclick="setDuration('60')" class="${activeDuration === '60' ? 'px-3.5 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm' : 'px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800'} transition-all">60秒</button>
+            </div>
+          </div>
+        </div>
+
         <p class="text-xs sm:text-sm text-slate-500 leading-relaxed italic">
           🎯 <strong>プロの実務アドバイス:</strong> ${p.tip}
         </p>
@@ -1192,11 +1037,11 @@
             <label class="text-xs font-black uppercase tracking-wider text-slate-500">
               完成したプロンプト命令（Flowにそのままペースト可能）
             </label>
-            <span class="text-[10px] text-emerald-600 font-bold">✓ 日本人仕様に調整済み</span>
+            <span class="text-[10px] text-emerald-600 font-bold">✓ 日本人＆口パク身振り完全補正済み</span>
           </div>
           
           <div class="relative group">
-            <div id="output-prompt-box" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-5 text-sm sm:text-base font-mono leading-relaxed text-slate-100 pr-12 min-h-[100px] break-all whitespace-pre-wrap select-all">
+            <div id="output-prompt-box" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-5 text-sm sm:text-base font-mono leading-relaxed text-slate-100 pr-12 min-h-[120px] break-all whitespace-pre-wrap select-all">
               ${processedText}
             </div>
             <button
@@ -1226,14 +1071,19 @@
 
         <div class="border-t border-slate-100 pt-6">
           <div class="text-xs font-black text-slate-700 uppercase tracking-wider mb-3">
-            🎨 仕上がり構図シミュレーター
+            🎨 仕上がり構図シミュレーター <span class="text-[10px] text-slate-400 font-normal">(プロンプトの構成やアスペクト比に応じて物理形状が滑らかに変化します)</span>
           </div>
           
-          <div class="relative w-full h-64 bg-slate-100 rounded-2xl border border-slate-200 overflow-hidden flex items-center justify-center">
+          <!-- Dynamic shape preview based on activeAspect -->
+          <div id="aspect-simulator" class="relative w-full aspect-transition bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shadow-inner ${
+            p.aspect === '16:9' ? 'h-64' : (p.aspect === '9:16' ? 'h-[420px] max-w-sm mx-auto rounded-3xl' : 'h-80 max-w-md mx-auto rounded-2xl')
+          } rounded-2xl">
+            
+            <!-- Glowing aesthetic inspired by 11.jpg top-left -->
             <div class="absolute top-4 left-4 w-40 h-40 rounded-full bg-gradient-to-tr from-[#86EFAC]/30 via-[#4ADE80]/15 to-transparent blur-2xl pointer-events-none"></div>
             
             <div class="relative z-10 text-center px-6">
-              <div class="text-4xl mb-2">
+              <div class="text-4xl mb-2 animate-pulse">
                 ${activeTab === 'image' ? '🖼️' : '🎬'}
               </div>
               <div class="font-black text-xs uppercase tracking-widest text-[#22C55E] mb-1">
@@ -1244,9 +1094,9 @@
               </p>
 
               <div class="flex flex-wrap justify-center gap-2 mt-4 text-[9px] text-slate-500 font-bold">
-                <span class="bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">Aspect: ${activeTab === 'image' ? '1:1 / 16:9' : '16:9 / 9:16縦長'}</span>
-                <span class="bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">Watermark: None</span>
-                <span class="bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">License: Commercial</span>
+                <span class="bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">比率 (Aspect): ${p.aspect}</span>
+                <span class="bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm ${p.category === 'video' ? '' : 'hidden'}">時間: ${activeDuration}s</span>
+                <span class="bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">モデル: ${activeTab === 'image' ? 'NanoBanana Pro' : 'Veo 3.1'}</span>
               </div>
             </div>
             
@@ -1268,7 +1118,7 @@
       }
     }
 
-    // MODIFIED: Changed the toast popup position to Bottom-Center (bottom-10) for much better user experience!
+    // Fixed: Added beautiful defined Toast notification utility
     function showToast(message, type = 'success') {
       const existingToast = document.getElementById('flow-toast');
       if (existingToast) {
