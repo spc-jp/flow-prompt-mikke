@@ -126,7 +126,7 @@
     <!-- Industry Selectors -->
     <div class="mb-10">
       <label class="block text-xs font-black uppercase tracking-wider text-slate-400 mb-3">
-        業種・ユースケースの選択
+        業種・ユースケース of 選択
       </label>
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="industry-selectors">
         <!-- Generated Dynamically -->
@@ -281,7 +281,7 @@
         <div>
           <h4 class="font-black text-slate-900 border-l-4 border-[#4ADE80] pl-2 mb-2">💡 アプリの目的</h4>
           <p class="text-slate-600 text-xs font-medium">
-            本アプリは、Googleの最先端映像・画像生成AI「Flow」を、日本国内の「中小企業」「士業」「Web制作」「ITアプリ開発」「コスメ販売」などの実務現場で最大限に活用するためのプロンプト支援ツールです。
+            本アプリは、Googleの最先端映像・画像生成AI「Flow」を,日本国内の「中小企業」「士業」「Web制作」「ITアプリ開発」「コスメ販売」などの実務現場で最大限に活用するためのプロンプト支援ツールです。
             「考える」を一人にさせないAI伴走をコンセプトに、最適なパラメータ調整を加え、コピペするだけで最高品質のアセットを出力できるように設計されています。
           </p>
         </div>
@@ -329,8 +329,31 @@
 
   <!-- JavaScript Logic -->
   <script>
+    // 口パク＆ジェスチャーの演出スタイルアセット
+    const LIP_SYNC_STYLES = {
+      counseling: {
+        name: "対面カウンセリング",
+        jp: "1対1で目の前の相談者に親身に寄り添い語りかけるように、時折優しく頷き、相手を安心させる穏やかな手振りのジェスチャー（open-palm gestures）を交えながら",
+        en: "gently addressing the camera as if speaking directly to a client in a supportive 1-on-1 counseling session, making natural reassuring nods and soft, comforting hand gestures"
+      },
+      seminar: {
+        name: "セミナー・プレゼン登壇",
+        jp: "ホワイトボードやプロジェクターの前に自信を持って立ち、広い会場の受講者に向かって、要所を強調する大きな手振りのジェスチャー（active hand gestures）を交えながら",
+        en: "standing confidently next to a presentation board, addressing a large audience with active, highly expressive hand gestures and professional body language to emphasize key points"
+      },
+      news: {
+        name: "ニュース解説・報道",
+        jp: "カメラの正面を真っ直ぐ見据え、カチッとした知的なスタジオを背景に、信頼感のある落ち着いた最小限の手振りの動き（authoritative hand movements）を交えながら",
+        en: "looking directly into the camera lens with a head-on angle, presenting with absolute trust like a professional news anchor, making controlled, highly authoritative hand movements"
+      },
+      interview: {
+        name: "インタビュー回答",
+        jp: "カメラから少しだけ目線を外し、目の前の質問者に笑顔で回答するように、時折自然に相槌を打ちながら、リラックスした手のジェスチャーを交えて",
+        en: "gently tilting their head and looking slightly off-camera as if answering an interviewer's question, showing warm conversational nods and relaxed, natural hand gestures"
+      }
+    };
+
     // Database of Japanese-optimized prompts
-    // All video prompts from 4 to 15 have been redesigned to accept upload images, speak lines (lip-sync), and make gestures (body language), dynamic for 15s/30s/60s lengths, with EN and JP translations.
     const PROMPT_DATABASE = {
       shigyo: {
         name: "士業・コンサルティング業",
@@ -352,7 +375,7 @@
             category: "image",
             aspect: "1:1",
             tags: ["エリア指定", "追加", "受講者"],
-            template: "赤枠で囲ったデスクの前のスペースに、熱心にメモを取りながら話を聞く中小企業の{ターゲット}を追加してください。",
+            template: "赤枠で囲ったデスクの前のスペースに, 熱心にメモを取りながら話を聞く中小企業の{ターゲット}を追加してください。",
             templateEn: "Add a modern Japanese {ターゲット} sitting in the designated red box area, taking notes intently during a business seminar. Blend naturally with the existing background, matching the lighting and photo quality perfectly.",
             defaults: { "ターゲット": "若手経営者（日本人男性）" },
             tip: "個別相談会やセミナー告知のバナーで「大盛況」の様子をリアルに再現できます。"
@@ -368,19 +391,19 @@
             tip: "ストック素材のスーツや小物の色を、自社のブランディングカラーに完全に調和させます。"
           },
           4: {
-            title: "4. 【動画】口パク・手ぶりSNS解説",
+            title: "4. 【動画】口パク・手ぶり解説動画",
             category: "video",
             aspect: "9:16",
             tags: ["画像から開始", "口パク", "手ぶり"],
             // 15 seconds
-            template15: "（アップロードした{性別}コンサルタントの画像から開始）日本の{性別}コンサルタントが、親しみやすい笑顔でカメラに向かって語りかける。自然な身ぶり手ぶり（ジェスチャー）を交えながら、次のセリフを話し、リップシンクを完全に合わせること。『{セリフ15}』",
-            templateEn15: "(Starting from the uploaded Japanese {性別} consultant image) A Japanese {性別} consultant is talking directly to the camera with a warm, friendly smile. Speaking naturally with gentle hand gestures and synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            template15: "（アップロードした{性別}コンサルタントの画像から開始）日本の{性別}コンサルタントが、{演出スタイル}。親しみやすい笑顔でカメラに向かって語りかけ、次のセリフを話し、口パク（リップシンク）を完全に同期させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese {性別} consultant image) A Japanese {性別} consultant is {演出スタイル}. Speaking directly with a warm smile, and perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
             // 30 seconds (2 Scenes)
-            template30: "【Flow 2シーン連動構成】\n[シーン1:問題提起]\n（アップロードした{性別}コンサルタントの画像から開始）カメラに向かって心配そうな、しかし寄り添う表情で身ぶり手ぶりを交えながら語りかける。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:解決策]\n表情がパッと明るい笑顔になり、手元で優しくジェスチャーしながら解決へ導くように語りかける。完璧なリップシンク。『{セリフ30_2}』",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Problem statement]\n(Starting from the uploaded Japanese {性別} consultant image) Speaking with empathetic expressions and natural hand movements, looking toward the camera. Perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ30_1}\"\n\n[Scene 2: Solution]\nThe consultant's expression brightens into a confident smile, speaking with gentle, reassuring hand gestures. Perfectly synchronized lip-sync matching: \"{セリフ30_2}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:問題提起]\n（アップロードした{性別}コンサルタントの画像から開始）日本のコンサルタントが、{演出スタイル}。カメラに向かって心配そうに寄り添う表情で語りかける。完璧な口パク（リップシンク）同期。『{セリフ30_1}』\n\n[シーン2:解決策]\n表情がパッと明るい笑顔になり、手元で優しくジェスチャーしながら解決へ導くように語りかける。完璧なリップシンク同期。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Problem statement]\n(Starting from the uploaded Japanese {性別} consultant image) A Japanese consultant is {演出スタイル}, speaking empathetic questions toward the camera with perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ30_1}\"\n\n[Scene 2: Solution]\nThe consultant's expression brightens into a confident smile, speaking with gentle, reassuring hand gestures. Perfectly synchronized lip-sync matching: \"{セリフ30_2}\"",
             // 60 seconds (3 Scenes)
-            template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み]\n（アップロードした{性別}コンサルタントの画像から開始）深刻な表情で、経営の孤独や悩みについて、説得力のある落ち着いたトーンで語りかける。手ぶりのジェスチャー。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:ツールの紹介]\n表情が希望に満ちた明るい顔になり、身ぶり手ぶりを大きく交えながら、みっけツールの革新性を解説する。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:応援結び]\n最後は満面の笑顔でカメラに向かって軽くお辞儀をし、頼もしく応援するようなガッツポーズ。完璧なリップシンク。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy]\n(Starting from the uploaded Japanese {性別} consultant image) Speaking with a sincere and empathetic expression about business problems in a calm, reassuring tone. Natural hand gestures. Perfectly synchronized lip-sync matching: \"{セリフ60_1}\"\n\n[Scene 2: Introduction]\nExpression brightens as they explain the innovative AI matching tool clearly with energetic hand gestures and body language. Perfectly synchronized lip-sync matching: \"{セリフ60_2}\"\n\n[Scene 3: Encouragement]\nPolitely bowing and making a supportive fist-pump of encouragement toward the camera with a warm smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み]\n（アップロードした{性別}コンサルタントの画像から開始）日本のコンサルタントが、{演出スタイル}。深刻な表情で、経営の孤独や悩みについて、落ち着いたトーンで語りかける。完璧なリップシンク同期。『{セリフ60_1}』\n\n[シーン2:ツールの紹介]\n表情が希望に満ちた明るい顔になり、身ぶり手ぶりを大きく交えながら、みっけツールの革新性を解説する。完璧なリップシンク同期。『{セリフ60_2}』\n\n[シーン3:応援結び]\n最後は満面の笑顔でカメラに向かって軽くお辞儀をし、頼もしく応援するようなガッツポーズ。完璧なリップシンク同期。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy]\n(Starting from the uploaded Japanese {性別} consultant image) A Japanese consultant is {演出スタイル}, speaking about business issues in a calm, reassuring tone with perfectly synchronized lip-sync matching: \"{セリフ60_1}\"\n\n[Scene 2: Introduction]\nExpression brightens as they explain the innovative AI matching tool clearly with energetic hand gestures and body language. Perfectly synchronized lip-sync matching: \"{セリフ60_2}\"\n\n[Scene 3: Encouragement]\nPolitely bowing and making a supportive fist-pump of encouragement toward the camera with a warm smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "性別": "男性",
               "セリフ15": "資金繰りや補助金にお悩みですか？自社に眠る価値、今すぐ診断してみましょう！",
@@ -390,7 +413,7 @@
               "セリフ60_2": "私たちの『価値みっけAI』は、複雑な試算表から補助金やアピールポイントを即座に検出。経営の新しい突破口を開きます。",
               "セリフ60_3": "考えるを、一人にしない。私たちSmile Plusが、全力でサポートします。今すぐお問い合わせください！"
             },
-            tip: "アップロード画像を基準（始点）にして、セリフに口の動きを完全に連動させるリップシンク機能。身ぶり手ぶり（hand gestures）の指定が、不自然な静止を防ぎます。"
+            tip: "アップロードした1枚の人物画像をベース（開始点）にし、セリフ（日本語）に口の動きを完全に一致させるリップシンク機能。身振り手振り（演出スタイル）を指定することで、不自然に固まらずイキイキと動きます。"
           },
           5: {
             title: "5. 【動画】フレーム間補完（操作変化）",
@@ -425,12 +448,12 @@
             category: "video",
             aspect: "9:16",
             tags: ["口パクアバター", "ジェスチャー"],
-            template15: "オフィスの受付で、丁寧にお辞儀をする日本の{役割}スタッフ（アップロード画像から開始）。カメラに向かって親しみやすい笑顔で、自然な手ぶりのジェスチャーを交えながら次のセリフを語る。リップシンクを完全に一致させること。『{セリフ15}』",
-            templateEn15: "(Starting from the uploaded Japanese receptionist image) A friendly Japanese {役割} standing in a modern office reception area bows politely, then speaks directly to the camera with natural hand gestures. Perfectly synchronized lip-sync: \"{セリフ15}\"",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:挨拶とお出迎え]\n（アップロードした画像から開始）日本の{役割}が笑顔で両手を前で重ね、親切にお辞儀をしながらお出迎えの挨拶。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:マッチング提案]\n一歩カメラに近づき、タブレットを優しく指さしながら、解決策のステップを明るく解説。完璧なリップシンク。『{セリフ30_2}』",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Welcome]\n(Starting from the uploaded image) A polite Japanese {役割} bows warmly with hands clasped gently in front of them, welcoming the client with synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Suggestion]\nStepping slightly closer, gesturing gently to point towards a tablet with a bright smile. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:親身な寄り添い]\n（アップロードした画像から開始）深刻な経営者の不安を受け止めるように、優しく頷きながら手ぶりを交えて親身に語りかける。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:みっけツールの解説]\nタブレットを胸の前に掲げ、画面をトントンと優しくタップしながら、みっけ診断のシンプルさを楽しく語る。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:次のアクションへの誘導]\n最後は安心感を与える極上の笑顔で、無料相談へ優しくエスコートする手振りと丁寧な一礼。完璧なリップシンク。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Deep Empathy]\n(Starting from the uploaded image) Empathizing with business worries, nodding with open-hand gestures in a supportive tone. Natural lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Simple Steps]\nHolding up an iPad, gently tapping the matches displayed on the screen with a friendly, cheerful explanation. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Call to Action]\nEscorting the user with a gentle guiding hand gesture, smiling beautifully, and bowing politely. Perfectly synchronized lip-sync: \"{セフ60_3}\"",
+            template15: "オフィスの受付で、丁寧にお辞儀をする日本の{役割}スタッフ（アップロード画像から開始）。日本の{役割}が、{演出スタイル}。カメラに向かって親しみやすい笑顔で次のセリフを語り、リップシンクを完全に一致させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese receptionist image) A friendly Japanese {役割} standing in a modern office reception area is {演出スタイル}. Speaking directly with natural hand gestures and perfectly synchronized lip-sync: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:挨拶とお出迎え]\n（アップロードした画像から開始）日本の{役割}が、{演出スタイル}。笑顔で両手を前で重ね、親切にお辞儀をしながらお出迎えの挨拶。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:マッチング提案]\n一歩カメラに近づき、タブレットを優しく指さしながら、解決策のステップを明るく解説。完璧なリップシンク。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Welcome]\n(Starting from the uploaded image) A polite Japanese {役割} is {演出スタイル}, welcoming the client with synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Suggestion]\nStepping slightly closer, gesturing gently to point towards a tablet with a bright smile. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:親身な寄り添い]\n（アップロードした画像から開始）日本の{役割}が、{演出スタイル}。深刻な経営者の不安を受け止めるように、優しく頷きながら手振りを交えて親身に語りかける。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:みっけツールの解説]\nタブレットを胸の前に掲げ、画面をトントンと優しくタップしながら、みっけ診断のシンプルさを楽しく語る。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:次のアクションへの誘導]\n最後は安心感を与える極上の笑顔で、無料相談へ優しくエスコートする手振りと丁寧な一礼。完璧なリップシンク。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Deep Empathy]\n(Starting from the uploaded image) A Japanese {役割} is {演出スタイル}, explaining business worries in a calm, reassuring tone. Natural lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Simple Steps]\nHolding up an iPad, gently tapping the matches displayed on the screen with a friendly, cheerful explanation. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Call to Action]\nEscorting the user with a gentle guiding hand gesture, smiling beautifully, and bowing politely. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "役割": "女性コンサルタント",
               "セリフ15": "補助金みっけ診断へようこそ！簡単な3ステップで、御社にぴったりの支援金を見つけましょう！",
@@ -440,7 +463,7 @@
               "セリフ60_2": "この『補助金みっけ診断』なら、スマホから業種と簡単な状況を入力するだけ。AIが膨大なデータベースから一瞬でマッチングします。",
               "セリフ60_3": "考えるを、一人にしない。私たちが、申請完了までしっかり伴走します。まずは下の診断ボタンからお試しください！"
             },
-            tip: "ご自身や、Canva等で作成した受付女性の「始点画像」を1枚Flowに読ませ、口パク（セリフ同期）とジェスチャー（hand gestures）を指定して解説を自動化します。"
+            tip: "ご自身や、Canva等で作成した受付女性の「始点画像」を1枚Flowに読ませ、口パク（セリフ同期）とジェスチャー（演出スタイル）を指定して解説を自動化します。"
           },
           8: {
             title: "8. 【動画】4Kアップスケール出力",
@@ -517,7 +540,7 @@
             category: "video",
             aspect: "16:9",
             tags: ["シーン結合", "タイムライン編集"],
-            template15: "日本のコンサルタントが笑顔で名刺を渡すシーン（アップロード画像から開始）。手振りのジェスチャー。タイムライン上のタイムコードをトリミングして、無駄のない最初の5秒、最後の2秒を正確に結合するシーンビルダー指示文。",
+            template15: "日本のコンサルタントが笑顔で名刺を渡すシーン（アップロード画像から開始）。手振りのジェスチャー。タイムライン上のタイムコードをトリミングして、無のない最初の5秒、最後の2秒を正確に結合するシーンビルダー指示文。",
             templateEn15: "(Video trimming using Scene Builder) Trim the generated footage of the Japanese consultant handing over their business card with polite hand gestures. Slice from 0:00 to 0:05, and merge with the last 2 seconds of bowing politely.",
             template30: "【Flow 2シーン連動構成】\n[シーン1:最初の5秒]\n（アップロードした男性の画像から開始）名刺を両手で差し出す日本のお辞儀。手振りのジェスチャー。『どうぞよろしくお願いします。』\n\n[シーン2:後半の5秒]\n打合せが順調に進み、手元で書類を優しく指さしながら笑顔でアドバイスする解説カット。これらをFlowのビルダー上で並べて10秒のスマート動画に再構成する指示。",
             templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Welcome Bow]\n(Starting from the uploaded assets) The Japanese expert hands over a business card with a polite bow and welcoming gesture. Trimming first 5 seconds.\n\n[Scene 2: Reassurance talk]\nMerging the walk-and-talk discussion clip with natural hand movements. Concatenate both segments using Flow timeline tool.",
@@ -527,16 +550,16 @@
             tip: "生成された映像を外部編集ソフトを使わず、Flow内の「タイムラインバー」を操作してカットし、綺麗な1本に繋ぎ合わせるためのテクニックです。"
           },
           14: {
-            title: "14. 【動画】台本からChatGPT大量プロンプト生成",
+            title: "14. 【動画】台本からChatGPT量産プロンプト生成",
             category: "video",
             aspect: "9:16",
             tags: ["ChatGPT連携", "大量作成", "台本構成"],
-            template15: "「以下の日本の士業向け解説台本に沿って、視聴維持率を最大化するVeo 3.1（Flow）用の動画プロンプトを20個、コピペ可能な英語でリスト出力して。登場人物は一貫して（アップロードした日本人コンサルタントの画像）を使用。自然な口パク（lip-sync）と手ぶり（hand gestures）の指定を必ず全てのプロンプトに含めること。」",
-            templateEn15: "\"Generate 20 optimized Veo 3.1 video prompts based on the following Japanese consult script. The subject must be consistent with the uploaded Japanese expert image. Ensure EVERY prompt explicitly includes 'speaking with perfectly synchronized Japanese lip-sync' and 'natural, gentle hand gestures' for fluid movement.\"",
-            template30: "「（アップロードした日本の{人物設定}画像から開始）15秒ずつの解説カットを2本結合して30秒にするための、ChatGPT用プロンプト生成。シーン1（問題提起）とシーン2（解決）が連動するよう、どちらも同じ日本人キャラクター・同じ服装・自然な口パクと身ぶり手振りの物理指示を英語のプロンプトで2ペア一括出力して。」",
-            templateEn30: "\"Generate a set of 2 connected Veo 3.1 video prompts (15s each) to make a seamless 30s video. The character must strictly match the uploaded Japanese {人物設定} image. Both scenes must include 'speaking with perfectly synchronized Japanese lip-sync' and 'natural hand gestures and open-palm body language'.\"",
-            template60: "「（アップロードした日本の{人物設定}画像から開始）15秒の動画を4本シーンビルダーで繋いで60秒の求人ストーリーにする。シーン1（挨拶）、シーン2（社内の様子）、シーン3（指導シーン）、シーン4（応募の呼びかけ）のプロンプト構成。すべてに『アップロード画像と同一人物』『手振りと口パクが完璧に同期している』指示を英語のプロンプトで4カット一括出力して。」",
-            templateEn60: "\"Generate a series of 4 connected Veo 3.1 prompts (15s each) to construct a complete 60s promotional story. The speaker must strictly match the uploaded Japanese {人物設定} image. All 4 prompts must contain 'natural hand gestures', 'reassuring body language', and 'synchronized lip-sync matching the dialogue text'.\"",
+            template15: "「以下の日本の士業向け解説台本に沿って、視聴維持率を最大化するVeo 3.1（Flow）用の動画プロンプトを20個、コピペ可能な英語でリスト出力して。登場人物は一貫して（アップロードした日本人コンサルタントの画像）を使用。自然な{演出スタイル}での口パク（lip-sync）と手ぶり（hand gestures）の指定を必ず全てのプロンプトに含めること。」",
+            templateEn15: "\"Generate 20 optimized Veo 3.1 video prompts based on the following Japanese consult script. The subject must be consistent with the uploaded Japanese expert image. Ensure EVERY prompt explicitly includes {演出スタイル} with perfectly synchronized Japanese lip-sync and hand gestures for fluid movement.\"",
+            template30: "「（アップロードした日本の{人物設定}画像から開始）15秒ずつの解説カットを2本結合して30秒にするための、ChatGPT用プロンプト生成。シーン1（問題提起）とシーン2（解決）が連動するよう、どちらも同じ日本人キャラクター・同じ服装・自然な{演出スタイル}での口パクと身ぶり手振りの物理指示を英語のプロンプトで2ペア一括出力して。」",
+            templateEn30: "\"Generate a set of 2 connected Veo 3.1 video prompts (15s each) to make a seamless 30s video. The character must strictly match the uploaded Japanese {人物設定} image. Both scenes must include {演出スタイル} with perfectly synchronized Japanese lip-sync and hand gestures.\"",
+            template60: "「（アップロードした日本の{人物設定}画像から開始）15秒の動画を4本シーンビルダーで繋いで60秒の求人ストーリーにする。シーン1（挨拶）、シーン2（社内の様子）、シーン3（指導シーン）、シーン4（応募の呼びかけ）のプロンプト構成。すべてに『アップロード画像と同一人物』『{演出スタイル}で手振りと口パクが完璧に同期している』指示を英語のプロンプトで4カット一括出力して。」",
+            templateEn60: "\"Generate a series of 4 connected Veo 3.1 prompts (15s each) to construct a complete 60s promotional story. The speaker must strictly match the uploaded Japanese {人物設定} image. All 4 prompts must contain {演出スタイル} with perfectly synchronized lip-sync matching the dialogue text.\"",
             defaults: { "人物設定": "50代の信頼感のある日本の男性税理士" },
             tip: "この指示をまずChatGPT等に投げ、一気に20個のFlow用プロンプト（英語）を生成させて、Flowにコピペするだけで爆速量産できます。"
           },
@@ -568,20 +591,20 @@
             tags: ["テクノロジー", "Webデザイン", "未来感"],
             template: "明るく開放的なITオフィスのデスクで、{デバイス}に向かって真剣に作業する日本の女性Webデザイナー。画面には美しいWebサイトのプロトタイプが光っている。ナチュラルな照明、洗練された北欧風インテリア、超高画質。",
             templateEn: "A Japanese female Web designer focusing intently on her work at a bright, sunlit IT office desk with '{デバイス}'. Modern Nordic interior, soft cinematic lighting, premium web mockups shining on screens, photorealistic.",
-            defaults: { "デバイス": "最新のデュアルモニター" },
+            defaults: { "デバイス": "最新 of デュアルモニター" },
             tip: "制作会社HPや、デザインスクール等のLPの顔となる、クリーンで大人の知的な美しさを感じさせるメイン画像です。"
           },
           4: {
-            title: "4. 【動画】口パク・手ぶりSNS解説",
+            title: "4. 【動画】口パク・手ぶり解説動画",
             category: "video",
             aspect: "9:16",
             tags: ["画像から開始", "口パク", "手ぶり"],
-            template15: "（アップロードした日本のデザイナー女性の画像から開始）日本の女性デザイナーが、笑顔でカメラに向かって語りかける。自然な手ぶりを交えながら、次のセリフを話し、リップシンクを完全に合わせること。『{セリフ15}』",
-            templateEn15: "(Starting from the uploaded Japanese designer image) A Japanese female designer talks to the camera with a friendly, welcoming smile, gesturing naturally with her hands. Perfectly synchronized lip-sync: \"{セリフ15}\"",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:問題提起]\n（アップロードしたデザイナー画像から開始）穏やかな表情から始まり、Webサイトの成果について手振りを交えながら語る。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:強みの提案]\n笑顔になり、親しみやすいジェスチャーで、制作会社の強みを指先を使いながらアピール。完璧なリップシンク。『{セリフ30_2}』",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Challenge]\n(Starting from the uploaded Japanese designer image) Speaking to the viewer with natural hand movements about web strategy. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Solution]\nSmiling brightly, emphasizing our responsive design speed with gentle hand gestures and direct eye contact. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:共感]\n（アップロードしたデザイナー画像から開始）「ホームページを作ったけど集客できない…」というお悩みに寄り添うように、親身に手振りを交えて語る。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:制作のこだわり]\n笑顔でタブレットのUIを示しながら、成約率を上げるデザインの仕組みを楽しく指さし解説。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:応援結び]\n最後は安心感を与える満面の笑顔で一礼し、力強く頷く。完璧なリップシンク。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy]\n(Starting from the uploaded Japanese designer image) Speaking supportively with natural hand gestures about why standard websites fail to get inquiries. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Explanation]\nHolding a tablet, pointing gently at the matches and match rate dashboard UI with an optimistic, gesturing tone. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Commitment]\nClosing with a confident, beautiful smile, nodding with a polite bow toward the camera. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            template15: "（アップロードした日本のデザイナー女性の画像から開始）日本の女性デザイナーが、{演出スタイル}。笑顔でカメラに向かって語りかけ、次のセリフを話し、口パク（リップシンク）を完全に同期させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese designer image) A Japanese female designer is {演出スタイル}. Speaking directly with a warm smile, and perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:問題提起]\n（アップロードしたデザイナー画像から開始）日本の女性デザイナーが、{演出スタイル}。少し真剣にWebサイトの課題を語りかける。完璧な口パク（リップシンク）同期。『{セリフ30_1}』\n\n[シーン2:強みの提案]\n表情が明るい笑顔になり、手振りを交えながら制作会社の強みを指先を使いアピール。完璧なリップシンク同期。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Challenge]\n(Starting from the uploaded Japanese designer image) A Japanese female designer is {演出スタイル}, speaking to the viewer with natural hand movements about web strategy. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Solution]\nSmiling brightly, emphasizing our responsive design speed with gentle hand gestures and direct eye contact. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:共感]\n（アップロードしたデザイナー画像から開始）日本の女性デザイナーが、{演出スタイル}。「ホームページを作ったけど集客できない…」というお悩みに寄り添うように親身に語る。完璧な口パク同期。『{セリフ60_1}』\n\n[シーン2:制作のこだわり]\n笑顔でタブレットのUIを示しながら、成約率を上げるデザインの仕組みを楽しく指さし解説。完璧なリップシンク同期。『{セリフ60_2}』\n\n[シーン3:応援結び]\n最後は安心感を与える満面の笑顔で一礼し、力強く頷く。完璧なリップシンク同期。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy]\n(Starting from the uploaded Japanese designer image) A Japanese female designer is {演出スタイル}, speaking supportively about why standard websites fail to get inquiries. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Explanation]\nHolding a tablet, pointing gently at the matches and match rate dashboard UI with an optimistic, gesturing tone. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Commitment]\nClosing with a confident, beautiful smile, nodding with a polite bow toward the camera. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "セリフ15": "集客でお悩みですか？ただ美しいだけでなく、お客様を増やすホームページをご提案します！",
               "セリフ30_1": "「ホームページを作ったけれど、問い合わせが来ない…」そう悩んでいませんか？デザインだけでは成果は出ません。",
@@ -610,16 +633,16 @@
             tip: "先進的なAIツールやSaaSのランディングページで、一歩先を行く未来感を演出するメインビジュアルです。"
           },
           4: {
-            title: "4. 【動画】口パク・手ぶりSaaS解説",
+            title: "4. 【動画】口パク・手ぶり解説動画",
             category: "video",
             aspect: "9:16",
             tags: ["画像から開始", "口パク", "手ぶり"],
-            template15: "（アップロードした日本の開発者男性の画像から開始）日本の開発者が、自信と親しみやすさに満ちた笑顔でカメラに語りかける。スマートな手ぶりを交えながら、次の日本語セリフを話し、リップシンクを完全に合わせること。『{セリフ15}』",
-            templateEn15: "(Starting from the uploaded Japanese developer image) A Japanese app developer speaks to the camera with a confident, reassuring smile, gesturing naturally with modern open-palm gestures. Perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:データ課題の提起]\n（アップロードした開発者画像から開始）タブレットを片手に持ち、少し真剣な表情で、手振りを交えながら業務効率化の重要性を語る。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:AIマッチングの解決]\n画面を示しながら満面の笑顔になり、アプリの使いやすさを手振りを交えて明るく紹介。完璧なリップシンク。『{セリフ30_2}』",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: App Challenge]\n(Starting from the uploaded Japanese developer image) Holding a tablet, gesturing with a serious yet empathetic face about office inefficiencies. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: matching solution]\nHis expression shifts to a happy, satisfied smile, presenting the dashboard on the phone screen with polite, fluid hand gestures. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み共感]\n（アップロードした開発者画像から開始）「面倒なExcel作業やデータ照合に、毎日時間を取られていませんか？」と親身に手振りを交えて問題提起。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:みっけツールの革新性]\nタブレットをトントンと指さしながら、AIマッチングの速さを身ぶり手ぶりを大きく交えて嬉しそうに熱弁。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:お試し呼びかけ]\n最後はカメラに向かって頼もしく頷きながら一礼。簡単にお試しできる魅力を笑顔でジェスチャー紹介。完璧なリップシンク。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Complexity empathy]\n(Starting from the uploaded Japanese developer image) Empathizing with heavy administrative overhead, gesturing supportively to the viewer with perfect lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: matching innovation]\nPointing excitedly at the matching rate pop-up displayed on the screen with dynamic, friendly hand movements. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: CTA invitation]\nNodding reassuringly with a welcoming gesture, bowing politely with an optimistic smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            template15: "（アップロードした日本の開発者男性の画像から開始）日本の開発者が、{演出スタイル}。自信と親しみやすさに満ちた笑顔でカメラに語りかけ、次の日本語セリフを話し、口パク（リップシンク）を完全に同期させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese developer image) A Japanese app developer is {演出スタイル}. Speaking directly with a warm smile, and perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:データ課題の提起]\n（アップロードした開発者画像から開始）日本の開発者が、{演出スタイル}。タブレットを片手に持ち、少し真剣に語る。完璧な口パク（リップシンク）同期。『{セリフ30_1}』\n\n[シーン2:AIマッチングの解決]\n表情が明るい笑顔になり、アプリの使いやすさを手振りを交えながら明るく紹介。完璧なリップシンク同期。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: App Challenge]\n(Starting from the uploaded Japanese developer image) A Japanese app developer is {演出スタイル}, speaking to the viewer with natural hand movements about web strategy. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: matching solution]\nHis expression shifts to a happy, satisfied smile, presenting the dashboard on the phone screen with polite, fluid hand gestures. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み共感]\n（アップロードした開発者画像から開始）日本の開発者が、{演出スタイル}。「面倒なExcel作業やデータ照合に、毎日時間を取られていませんか？」と親身に語りかける。完璧な口パク同期。『{セリフ60_1}』\n\n[シーン2:みっけツールの革新性]\nタブレットをトントンと指さしながら、AIマッチングの速さを身ぶり手ぶりを大きく交えて嬉しそうに解説。完璧なリップシンク同期。『{セリフ60_2}』\n\n[シーン3:お試し呼びかけ]\n最後はカメラに向かって頼もしく頷きながら一礼。簡単にお試しできる魅力を笑顔でジェスチャー紹介。完璧なリップシンク同期。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Complexity empathy]\n(Starting from the uploaded Japanese developer image) A Japanese app developer is {演出スタイル}, explaining about office inefficiencies. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: matching innovation]\nPointing excitedly at the matching rate pop-up displayed on the screen with dynamic, friendly hand movements. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: CTA invitation]\nNodding reassuringly with a welcoming gesture, bowing politely with an optimistic smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "セリフ15": "面倒なデータ分析はもう不要！このアプリを使えば、自社の『隠れた価値』が3タップで見つかります！",
               "セリフ30_1": "「補助金や融資、自社に合う制度が多すぎて選べない…」そう悩んでいませんか？情報の海で迷うのはもう終わりです。",
@@ -648,16 +671,16 @@
             tip: "ブランドイメージの統一感、ラグジュアリーでありながら自然体な美しさを一発で表現します。"
           },
           4: {
-            title: "4. 【動画】口パク・手ぶりルーティン解説",
+            title: "4. 【動画】口パク・手ぶり解説動画",
             category: "video",
             aspect: "9:16",
             tags: ["画像から開始", "口パク", "手ぶり"],
-            template15: "（アップロードした日本のビューティーモデル画像から開始）潤い肌の日本人女性モデルが、優しい笑顔でカメラに向かって語りかける。美容液ボトルを手に取り、優しく撫でるような手振りのジェスチャー。完璧なリップシンク。『{セリフ15}』",
-            templateEn15: "(Starting from the uploaded Japanese model image) A Japanese beauty model with glowing skin talks to the camera with a gentle, beautiful smile, supportively holding the cosmetic bottle. Natural hand gestures. Perfectly synchronized lip-sync: \"{セリフ15}\"",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:肌悩みへのアプローチ]\n（アップロードしたモデル画像から開始）すっぴんの美しさについて、親身に頷きながら手振りで優しく頬を包み込むように語りかける。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:ツヤ感の喜び]\nボトルを開けて、一滴を指先に落とし、嬉しそうにツヤをカメラに見せる。完璧なリップシンク。『{セリフ30_2}』",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Skin worry]\n(Starting from the uploaded Japanese model image) Gently gesturing to her cheek with a empathetic, calm smile. Perfectly synchronized lip-sync matching: \"{セリフ30_1}\"\n\n[Scene 2: Glowing skin]\nOpening the bottle, dropping a single golden drop on her finger, and looking at the camera with a happy, radiant smile. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:スキンケアの課題]\n（アップロードしたモデル画像から開始）「季節の変わり目、お肌の乾燥に悩まされていませんか？」と、落ち着いた語りかけ。優しい手の動き。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:無添加オイルの潤い]\n美容液ボトルを頬に優しくあてて、その心地よさを手振りを大きく交えながら、うっとりするような笑顔で熱弁。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:毎日のルーティンへの招待]\n最後は両手でハートマークをそっと作り、極上の笑顔で明日のお肌への期待を語る。完璧なリップシンク。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: routine challenge]\n(Starting from the uploaded Japanese model image) Addressing seasonal skin dryness with empathetic head tilts and comforting hand gestures. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Natural hydration]\nGently applying the serum, showing her glowing, hydrated cheek with a beautiful, gesturing smile. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Invitation]\nMaking a gentle heart gesture with both hands, smiling brightly, and showing off her beautiful glowing skin with a soft nod. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            template15: "（アップロードした日本のビューティーモデル画像から開始）潤い肌の日本人女性モデルが、{演出スタイル}。優しい笑顔でカメラに向かって語りかけ、次のセリフを話し、口パク（リップシンク）を完全に同期させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese model image) A Japanese beauty model with glowing skin is {演出スタイル}. Speaking directly with a warm smile, and perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:肌悩みへのアプローチ]\n（アップロードしたモデル画像から開始）日本のビューティーモデルが、{演出スタイル}。お肌の悩みについて優しく頬を包み込みながら親身に語る。完璧な口パク（リップシンク）同期。『{セリフ30_1}』\n\n[シーン2:ツヤ感の喜び]\n表情がパッと明るくなり、ボトルを開けて一滴を指先に落とし、ツヤを見せる。完璧なリップシンク同期。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Skin worry]\n(Starting from the uploaded Japanese model image) A Japanese beauty model is {演出スタイル}, explaining about business statistics with empathetic head tilts. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Glowing skin]\nOpening the bottle, dropping a single golden drop on her finger, and looking at the camera with a happy, radiant smile. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:スキンケアの課題]\n（アップロードしたモデル画像から開始）日本のビューティーモデルが、{演出スタイル}。「お肌の乾燥に悩まされていませんか？」と親身に語りかける。完璧な口パク同期。『{セリフ60_1}』\n\n[シーン2:無添加オイルの潤い]\n美容液ボトルを頬に優しくあてて、その心地よさを手振りを大きく交えながら、うっとりするような笑顔で熱弁。完璧なリップシンク同期。『{セリフ60_2}』\n\n[シーン3:毎日のルーティンへの招待]\n最後は両手でハートマークをそっと作り、極上の笑顔で明日のお肌への期待を語る。完璧なリップシンク同期。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: routine challenge]\n(Starting from the uploaded Japanese model image) A Japanese beauty model is {演出スタイル}, addressing seasonal skin dryness with empathetic head tilts. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Natural hydration]\nGently applying the serum, showing her glowing, hydrated cheek with a beautiful, gesturing smile. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Invitation]\nMaking a gentle heart gesture with both hands, smiling brightly, and showing off her beautiful glowing skin with a soft nod. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "セリフ15": "お肌の乾燥、もう気にしたくないですよね。この一滴で、明日の朝お肌がふっくらと生まれ変わります！",
               "セリフ30_1": "「色々スキンケアを試したけれど、時間が経つと乾燥する…」そう感じたことはありませんか？",
@@ -686,16 +709,16 @@
             tip: "会社のホームページや採用ページに掲載するだけで、歴史と確固たるプライド（信頼性）が伝わる写真です。"
           },
           4: {
-            title: "4. 【動画】口パク・手ぶり代表メッセージ",
+            title: "4. 【動画】口パク・手ぶり解説動画",
             category: "video",
             aspect: "9:16",
             tags: ["画像から開始", "口パク", "手ぶり"],
-            template15: "（アップロードした工務店の日本の{立場}の画像から開始）ねじり鉢巻をした日本の{立場}が、温かい職人魂を感じる笑顔でカメラに語りかける。逞しい手振りのジェスチャー。完璧なリップシンク。『{セリフ15}』",
-            templateEn15: "(Starting from the uploaded Japanese craftsman image) A Japanese {立場} with a hachimaki headband speaks directly to the camera with a warm, passionate smile, gesturing with natural hand movements. Perfectly synchronized lip-sync: \"{セリフ15}\"",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:職人のこだわり]\n（アップロードした職人画像から開始）自慢の製品や木材を手振りで優しく撫でながら、日本の技術のこだわりを真剣な表情で語りかける。完璧なリップシンク。『{セリフ30_1}』\n\n[シーン2:温かい呼びかけ]\n笑顔になり、力強く拳を握りしめ（手振りジェスチャー）、安心のアフターサポートを約束する。完璧なリップシンク。『{セリフ30_2}』",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Passionate talk]\n(Starting from the uploaded Japanese craftsman image) Gesturing with his hands toward a wooden masterwork, explaining quality with pride. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Trust guarantee]\nTransitioning to a proud smile, making an encouraging fist gesture to emphasize our lifetime warranty. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:伝統と挑戦]\n（アップロードした職人画像から開始）「家は、買うものではなく、家族と一緒に育てるものです。」と、穏やかに頷きながら優しく手振り語りかける。完璧なリップシンク。『{セリフ60_1}』\n\n[シーン2:匠みっけAI診断]\nタブレットでマッチした図面を示しながら、最先端技術（マッチング）と職人技の融合を大きく手振り解説。完璧なリップシンク。『{セリフ60_2}』\n\n[シーン3:末長いお約束]\n最後はカメラに向かって力強く胸を叩いて、誇らしい笑顔と深々とした一礼。完璧なリップシンク。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy talk]\n(Starting from the uploaded Japanese craftsman image) Speaking warmly about family growth and home durability with natural hand gestures and nods. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Innovation matching]\nHolding up a blueprint, gesturing dynamically to explain how modern match tools combine with traditional values. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Trusted Bow]\nPatting his chest proudly with a big confident smile, concluding with a respectful bow toward the camera. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            template15: "（アップロードした工務店の日本の{立場}の画像から開始）ねじり鉢巻をした日本の{立場}が、{演出スタイル}。温かい職人魂を感じる笑顔でカメラに語りかけ、次の日本語セリフを話し、口パク（リップシンク）を完全に同期させること。『{セリフ15}』",
+            templateEn15: "(Starting from the uploaded Japanese craftsman image) A Japanese {立場} with a hachimaki headband is {演出スタイル}. Speaking directly with a warm smile, and perfectly synchronized lip-sync matching the spoken Japanese line: \"{セリフ15}\"",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:職人のこだわり]\n（アップロードした職人画像から開始）日本の職人が、{演出スタイル}。木材を優しく撫でながら、日本の技術のこだわりを真剣な表情で語りかける。完璧な口パク（リップシンク）同期。『{セリフ30_1}』\n\n[シーン2:温かい呼びかけ]\n表情が明るい笑顔になり、手元で優しくジェスチャーしながら解決へ導く。完璧な口パク同期。『{セリフ30_2}』",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Passionate talk]\n(Starting from the uploaded Japanese craftsman image) A Japanese craftsman is {演出スタイル}, explaining about work progress with pride. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: Trust guarantee]\nTransitioning to a proud smile, making an encouraging fist gesture to emphasize our lifetime warranty. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:伝統と挑戦]\n（アップロードした職人画像から開始）日本の職人が、{演出スタイル}。「家は、ご家族の未来を育てるものです。」と、穏やかに頷きながら優しく親身に語る。完璧な口パク同期。『{セリフ60_1}』\n\n[シーン2:匠みっけAI診断]\nタブレットでマッチした図面を示しながら、最先端技術と職人技の融合を大きく手振り解説。完璧なリップシンク同期。『{セリフ60_2}』\n\n[シーン3:末長いお約束]\n最後はカメラに向かって力強く胸を叩いて、誇らしい笑顔と深々とした一礼。完璧なリップシンク同期。『{セリフ60_3}』",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Empathy talk]\n(Starting from the uploaded Japanese craftsman image) A Japanese craftsman is {演出スタイル}, speaking about house durability. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: Innovation matching]\nHolding up a blueprint, gesturing dynamically to explain how modern match tools combine with traditional values. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: Trusted Bow]\nPatting his chest proudly with a big confident smile, concluding with a respectful bow toward the camera. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "立場": "職人棟梁（日本人男性）",
               "セリフ15": "一棟一棟、我が子を育てるように心を込めて。100年住み続けられる頑丈な家を、私たちが造り続けます！",
@@ -722,6 +745,7 @@
     // Default sub-states for upgraded version
     let activeLang = 'jp'; // 'jp' or 'en'
     let activeDuration = '15'; // '15', '30', '60'
+    let activeStyle = 'counseling'; // Default lip sync style
 
     // Initialize UI
     function init() {
@@ -862,7 +886,7 @@
       renderWorkspace();
     }
 
-    // Select dynamic template based on lang and duration settings
+    // Select dynamic template based on lang, duration, and style settings
     function getProcessedPromptText() {
       const p = PROMPT_DATABASE[activeIndustry].prompts[selectedPromptId];
       if (!p) return '';
@@ -883,6 +907,11 @@
         }
       }
 
+      // Inject chosen speaking and body gesture style
+      const lipSyncText = LIP_SYNC_STYLES[activeStyle][activeLang];
+      text = text.split('{演出スタイル}').join(lipSyncText);
+
+      // Resolve custom parameters (defaults)
       Object.keys(customValues).forEach(key => {
         const val = customValues[key] || `[${key}]`;
         text = text.split(`{${key}}`).join(val);
@@ -920,12 +949,34 @@
       btn30.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
       btn60.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800";
       
-      const activeStyle = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm";
-      if (duration === '15') btn15.className = activeStyle;
-      else if (duration === '30') btn30.className = activeStyle;
-      else btn60.className = activeStyle;
+      const activeStyleClass = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm";
+      if (duration === '15') btn15.className = activeStyleClass;
+      else if (duration === '30') btn30.className = activeStyleClass;
+      else btn60.className = activeStyleClass;
       
       renderWorkspace();
+    }
+
+    // Set lip sync gestures style
+    function setLipSyncStyle(styleKey) {
+      activeStyle = styleKey;
+      
+      // Update dynamically generated active workspace button states
+      const styleBtns = document.querySelectorAll('.style-toggle-btn');
+      styleBtns.forEach(btn => {
+        const isCurrent = btn.getAttribute('data-style') === styleKey;
+        if (isCurrent) {
+          btn.className = "style-toggle-btn px-3 py-1.5 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-sm transition-all";
+        } else {
+          btn.className = "style-toggle-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/50 transition-all";
+        }
+      });
+
+      // Update output box dynamically
+      const pBox = document.getElementById('output-prompt-box');
+      if (pBox) {
+        pBox.innerText = getProcessedPromptText();
+      }
     }
 
     // Render Workspace Right Area
@@ -982,6 +1033,9 @@
         `;
       }
 
+      // Check if current prompt contains a mouth speaking animation style tag
+      const showStyleControls = p.category === 'video' && currentTemplate && currentTemplate.includes('{演出スタイル}');
+
       workspace.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
           <div>
@@ -1025,6 +1079,30 @@
             </div>
           </div>
         </div>
+
+        <!-- 口パク演出パターン（動的表示） -->
+        ${showStyleControls ? `
+          <div class="space-y-2 bg-emerald-50/40 p-4 rounded-2xl border border-emerald-100">
+            <div class="text-xs font-black text-emerald-800 flex items-center space-x-1.5">
+              <span>🎬 演出スタイル切り替え (口パク・身振り手振りのパターン)</span>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-1">
+              ${Object.entries(LIP_SYNC_STYLES).map(([key, styleObj]) => `
+                <button 
+                  onclick="setLipSyncStyle('${key}')" 
+                  data-style="${key}"
+                  class="style-toggle-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    activeStyle === key 
+                      ? 'bg-emerald-600 text-white shadow-sm font-black' 
+                      : 'text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/50'
+                  }"
+                >
+                  ${key === 'counseling' ? '🤝 ' : (key === 'seminar' ? '🏫 ' : (key === 'news' ? '📺 ' : '💬 '))}${styleObj.name}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
 
         <p class="text-xs sm:text-sm text-slate-500 leading-relaxed italic">
           🎯 <strong>プロの実務アドバイス:</strong> ${p.tip}
