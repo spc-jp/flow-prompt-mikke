@@ -227,7 +227,6 @@
       </div>
 
       <!-- Right Column (Generator Workspace) -->
-      <!-- Fixed comment and ensured no sandbox localStorage access or RegExp braces bugs -->
       <div class="lg:col-span-8 space-y-6">
         
         <!-- Active prompt card workspace -->
@@ -554,7 +553,7 @@
             template: "赤枠で囲ったデスクの前のスペースに、熱心にメモを取りながら話を聞く中小企業の{ターゲット}を追加してください。",
             templateEn: "Add a modern Japanese {ターゲット} sitting in the designated red box area, taking notes intently during a business seminar. Blend naturally with the existing background, matching the lighting and photo quality perfectly.",
             defaults: { "ターゲット": "若手経営者（日本人男性）" },
-            tip: "個別相談会やセミナー告知のバナーで「大盛況」の様子をリアルに再現できます。"
+            tip: "個別相談会やセミナー告知のバナーで「大盛盛況」の様子をリアルに再現できます。"
           },
           3: {
             template: "赤枠で囲ったネクタイとファイルのカラーを、鮮やかな{カラー}に変更してください。赤枠は生成後描写しないでください。",
@@ -650,7 +649,7 @@
           11: {
             template15: "（カメラの位置：上に移動）デスクを挟んで日本のコンサルタントと日本の経営者が、手振りを交えて熱心に戦略を練っている様子を、少し斜め上の高いアングルから撮影した俯瞰アングルに変更。",
             templateEn15: "(Camera instruction: Move up) Change to a high-angle shot looking down at the Japanese consultant and client discussing strategy around a wooden table.",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:斜め上の俯瞰]\n（アップロード画像から開始）二人の打合せシーンを、少し斜め上の高いアングルからデスク全体を見下ろすように撮影。\n\n[シーン2:ズームインへの連動]\n俯瞰アングル位置から、デスクの上の補助金アプリの画面に向かって、カメラがゆっくりと下降していくカットの連動。",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:斜め上の俯瞰]\n（アップロード画像から開開始）二人の打合せシーンを、少し斜め上の高いアングルからデスク全体を見下ろすように撮影。\n\n[シーン2:ズームインへの連動]\n俯瞰アングル位置から、デスクの上の補助金アプリの画面に向かって、カメラがゆっくりと下降していくカットの連動。",
             templateEn30: "[Flow 2-Scene Series]\nChange to a high-angle perspective looking down, then slowly glide the camera down toward the screen of the tablet on the desk.",
             template60: "【Flow 3シーン連動構成】\n[シーン1:俯瞰全景]\n真上近くの非常に高いカメラアングルから、木目調デスクを囲んで熱心に語り合う日本のビジネスコンサルタントと起業家。自然なジェスチャー。\n\n[シーン2:コンサルタントの目線への下降]\nカメラがスーッと高度を下げ、コンサルタントの笑顔の表情の横顔を捉えるアングルへのシームレスな移行。\n\n[シーン3:経営者の納得顔への回り込み]\nそのまま回り込み、嬉しそうに頷く日本人起業家の表情をバストアップで捉える3段カメラワーク構成。",
             templateEn60: "[Flow 3-Scene Series]\nOverhead high angle of the team, sliding down to the side profile of the consultant, and orbiting around to catch the happy entrepreneur nodding.",
@@ -707,14 +706,16 @@
           },
           // NEW 17 PROMPT
           17: {
-            template15: "（アップロードした{性別}コンサルタントの画像とMP3音源から開始）自社曲の『{曲調}』のリズムとテンポに完全にシンクロさせて、日本の{性別}コンサルタントが{ダンスの激しさ}で踊りながら、歌詞に合わせて口パク（リップシンク）を完全に同期させる様子。サビの『{歌詞}』のタイミングで、笑顔でポーズを決める魅力的な15秒PR動画。",
-            templateEn15: "(Starting from the uploaded Japanese {性別} consultant image and the uploaded MP3) A professional Japanese {性別} consultant performs a highly engaging, synchronized dance matching the beat of the uploaded {曲調} song with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" in this 15-second promo.",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロ・歌い出し]\n（アップロード画像とMP3から開始）『{曲調}』のビートにのり、日本の{性別}コンサルタントが{ダンスの激しさ}でステップを踏みながら笑顔でカメラに歌いかける。完璧なリップシンク同期。『{歌詞}』\n\n[シーン2:サビ・アピール]\n曲が一番盛り上がる大サビへ。大きく手振りを交えながら、楽しそうに歌い踊り、完璧にリップシンク同期する様子。",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Intro]\n(Starting from uploaded assets) A Japanese {性別} consultant steps rhythmically to the uploaded {曲調} track with {ダンスの激しさ} motions, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Chorus]\nThe beat intensifies; the consultant dances with highly expressive movements, perfectly synchronizing mouth shapes to the vocals and lyrics.",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロード画像とMP3から開始）『{曲調}』のリズムにのり、{ダンスの激しさ}で踊り出すコンサルタント。口パク完璧。 『{歌詞}』\n\n[シーン2:間奏・手振りのアピール(30秒)]\n間奏部分。カメラが左から右へ滑らかに回り込みながら、コンサルタントが楽しそうに手元のタブレットを指さしてダンスするカット。\n\n[シーン3:大サビ・ラストポーズ(15秒)]\n最後の盛り上がりに合わせ、カメラに向かってお辞儀をし、自信に満ちた笑顔で応援のガッツポーズ。完璧なリップシンク同期。",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Verse (15s)]\n(Starting from uploaded assets) Dancing beautifully to the {曲調} rhythm with {ダンスの激しさ} posture, lip-syncing to: \"{歌詞}\".\n\n[Scene 2: Interlude (30s)]\nThe camera orbits left to right while the consultant happily gestures towards a tablet device showing data, matching the musical beats.\n\n[Scene 3: Grand Chorus (15s)]\nStriking a polite bow and an encouraging fist pump under warm volumetric lighting. Perfectly synchronized lip-sync matching the grand finale.",
+            template15: "（アップロードした{性別}コンサルタントの画像、およびFlow側にアップロードした音声ファイル『{MP3ファイル名}』から開始）音楽ビートに完全にシンクロさせて、日本の{性別}コンサルタントが{ダンスの激しさ}で踊りながら、歌詞に合わせて口（リップシンク）を完璧に同期させる様子。『{歌い出し秒数}』からサビの『{歌詞}』を笑顔いっぱいに口ずさむ様子。カメラはゆっくり前進し、明るく活気のある15秒PR音楽連動CM。",
+            templateEn15: "(Starting from the uploaded Japanese {性別} consultant image and the uploaded audio file '{MP3ファイル名}') The character performs a beautifully synchronized dance matching the beat of '{曲調}' with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" starting precisely from '{歌い出し秒数}' in this 15-second music promo video.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロ・歌い出し]\n（アップロードした画像とFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』のビートにのり、日本の{性別}コンサルタントが{ダンスの激しさ}でステップを踏みながら笑顔でカメラに歌いかける。完璧なリップシンク同期。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:サビ・アピール]\n曲が一番盛り上がる大サビへ。大きく手振りを交えながら、楽しそうに歌い踊り、完璧にリップシンク同期する様子。カメラワークはダイナミックな右回り込み。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Intro]\n(Starting from uploaded assets and '{MP3ファイル名}') A Japanese {性別} consultant steps rhythmically to the uploaded {曲調} track with {ダンスの激しさ} motions, starting from '{歌い出し秒数}' and lip-syncing: \"{歌詞}\".\n\n[Scene 2: Chorus]\nThe beat intensifies; the consultant dances with highly expressive movements next to a digital matching graph, perfectly synchronizing mouth shapes to the vocals.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロード画像とFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』のリズムにのり、{ダンスの激しさ}で踊り出すコンサルタント。口パク完璧。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:間奏・手振りのアピール(30秒)]\n間奏部分。カメラが左から右へ滑らかに回り込みながら、コンサルタントが楽しそうに手元のタブレットの診断マッチング結果を指さしてダンスするカット。音源ビートと手の動きが完璧にシンクロしている様子。\n\n[シーン3:大サビ・ラストポーズ(15秒)]\n最後の盛り上がりに合わせ、カメラに向かってお辞儀をし、自信に満ちた笑顔で応援のガッツポーズ。完璧なリップシンク同期。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Verse (15s)]\n(Starting from uploaded assets and '{MP3ファイル名}') Dancing beautifully to the {曲調} rhythm with {ダンスの激しさ} posture, starting from '{歌い出し秒数}' and lip-syncing to: \"{歌詞}\".\n\n[Scene 2: Interlude (30s)]\nThe camera orbits left to right while the consultant happily gestures towards a tablet device showing matched data sheets, matching the musical beats.\n\n[Scene 3: Grand Chorus (15s)]\nStriking a polite bow and an encouraging fist pump under warm volumetric lighting. Perfectly synchronized lip-sync matching the grand finale.",
             defaults: {
               "性別": "男性",
+              "MP3ファイル名": "smileplus_song.mp3",
+              "歌い出し秒数": "0:05",
               "歌詞": "資金繰りや補助金にSmile Plus、みんなの未来をみっけよう！"
             },
             tip: "Flowのオーディオ同期機能（Audio-to-Video）を最大限に活用します。自作のMP3とマスコット画像を両方アップロードし、テンポ感（BPM）を指示するとさらにシンクロ率が高まります。"
@@ -825,7 +826,7 @@
             tip: "実績紹介動画のテンプレートを一括で書き出すハブ指示文です。"
           },
           15: {
-            template15: "【Flow 5カット連動】\nカット1: {クライアント}がオンライン会議で日本の制作会社と悩みを相談している様子\nカット2: 日本人女性デザイナーが白い紙に手書きでワイヤーフレームのラフを描く手元\nカット3: パソコン画面上で、Figmaを使って美しいデザインパーツが組み立てられていく様子\nカット4: スマホ実機で、完成した素晴らしい日本語LPがスムーズに動いている手元\nカット5: 日本人クライアントが売上ダッシュボードを見て、喜びの笑顔を見せる日本のオフィスの様子",
+            template15: "【Flow 5カット連動】\nカット1: {クライアント}がオンライン会議で日本の制作会社と悩みを相談している様子\nカット2: 日本人女性デザイナーが白い紙に手書きでワイヤーフレームのラフを描く手元\nカット3: パソコン画面上で、Figmaを使って美しいデザインパーツが組み立てられていく様子\nカット4: スマホ実機で, 完成した素晴らしい日本語LPがスムーズに動いている手元\nカット5: 日本人クライアントが売上ダッシュボードを見て、喜びの笑顔を見せる日本のオフィスの様子",
             templateEn15: "[Flow 5-Scene Connected Series]\n(Character strictly consistent with the uploaded Japanese client image)\nScene 1: Online video meeting with the Japanese web agency.\nScene 2: Hands sketching wireframe layout on paper.\nScene 3: Assembling modern components in Figma UI.\nScene 4: Operating the completed fully responsive mobile LP smoothly.\nScene 5: The happy client looking at sales dashboards in a bright Tokyo office.",
             defaults: { "クライアント": "30代の個人サロンオーナーの日本人女性" },
             tip: "Web制作会社の信頼性を最高潮に高める「LP制作の物語」を1分で制作します。"
@@ -840,13 +841,15 @@
           },
           // NEW 17 PROMPT
           17: {
-            template15: "（アップロードした日本の女性デザイナーの画像とMP3音源から開始）自作のオリジナル曲『{曲調}』のビートとテンポに合わせて、日本の女性デザイナーが{ダンスの激しさ}で歌って踊る。歌声と歌詞に合わせて口パク（リップシンク）を完全に一致させ、サビの『{歌詞}』に合わせて、笑顔で指さしポーズをする15秒音楽CM。",
-            templateEn15: "(Starting from the uploaded Japanese female designer image and the uploaded MP3) A professional Japanese female designer performs a lively dance perfectly in sync with the rhythm of the uploaded {曲調} theme song with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" in this 15-second music promo.",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロダンス]\n（アップロードした画像とMP3から開始）『{曲調}』の心地よいメロディに乗り、日本の女性デザイナーが楽しそうに{ダンスの激しさ}でステップ。完璧な口パク同期。『{歌詞}』\n\n[シーン2:サビでデザインアピール]\nサビに入ると同時に、手元のPC画面を笑顔で示しながら、さらに明るくイキイキと歌い踊り、完璧にリップシンクする様子。",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Intro Groove]\n(Starting from uploaded assets) A Japanese female designer grooving happily to the {曲調} track with {ダンスの激しさ} steps, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Chorus Shine]\nAs the chorus drops, she dances while naturally gesturing toward her computer screen with perfectly synchronized mouth shapes to the vocals.",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロードした画像とMP3から開始）ハッピーな『{曲調}』の音に合わせ、笑顔で{ダンスの激しさ}で歌い踊り始める日本の女性デザイナー。口パク完璧。 『{歌詞}』\n\n[シーン2:間奏と手振りの変化(30秒)]\n間奏でカメラが回り込みながら、デザイナーがカラフルなカラーパレットやスケッチブックを掲げてリズムよく踊る演出カット。\n\n[シーン3:大サビ(15秒)]\n最高潮のサビに合わせて、ウインクをしながら可愛い手振りのフィニッシュポーズ。完璧なリップシンク同期。",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Verse (15s)]\n(Starting from uploaded assets) Dancing to the cheerful {曲調} track with {ダンスの激しさ} movements, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Interlude (30s)]\nThe camera spins while she playfully holds up color swatches and design planners in perfect rhythm.\n\n[Scene 3: Chorus Climax (15s)]\nStriking a cute, gesturing finish pose with a playful wink toward the camera. Perfectly synchronized lip-sync matching the grand finale.",
+            template15: "（アップロードした日本の女性デザイナーの画像、およびFlow側にアップロードした音声ファイル『{MP3ファイル名}』から開始）音楽ビートに完全にシンクロさせて、日本の女性デザイナーが{ダンスの激しさ}で歌って踊る。歌声と歌詞に合わせて口（リップシンク）を完全に同期させ、サビの『{歌詞}』のタイミング（『{歌い出し秒数}』から）で、笑顔で指さしポーズをする15秒音楽CM。",
+            templateEn15: "(Starting from the uploaded Japanese female designer image and the uploaded audio file '{MP3ファイル名}') A professional Japanese female designer performs a lively dance perfectly in sync with the rhythm of the uploaded {曲調} theme song with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" starting precisely from '{歌い出し秒数}' in this 15-second music promo.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロダンス]\n（アップロードした画像とFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』の心地よいメロディに乗り、日本の女性デザイナーが楽しそうに{ダンスの激しさ}でステップ。完璧な口パク同期。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:サビでデザインアピール]\nサビに入ると同時に、手元のPC画面を笑顔で示しながら、さらに明るくイキイキと歌い踊り、完璧にリップシンクする様子。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Intro Groove]\n(Starting from uploaded assets and '{MP3ファイル名}') A Japanese female designer grooving happily to the {曲調} track with {ダンスの激しさ} steps, starting from '{歌い出し秒数}' and lip-syncing: \"{歌詞}\".\n\n[Scene 2: Chorus Shine]\nAs the chorus drops, she dances while naturally gesturing toward her computer screen with perfectly synchronized mouth shapes to the vocals.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロードした画像とFlow側オーディオ『{MP3ファイル名}』から開始）ハッピーな『{曲調}』の音に合わせ、笑顔で{ダンスの激しさ}で歌い踊り始める日本の女性デザイナー。口パク完璧。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:間奏と手振りの変化(30秒)]\n間奏でカメラが回り込みながら、デザイナーがカラフルなカラーパレットやスケッチブックを掲げてリズムよく踊る演出カット。ビートに完全に調和した自然な手振りの動き。\n\n[シーン3:大サビ(15秒)]\n最高潮のサビに合わせて、ウインクをしながら可愛い手振りのフィニッシュポーズ。完璧なリップシンク同期。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Verse (15s)]\n(Starting from uploaded assets and '{MP3ファイル名}') Dancing to the cheerful {曲調} track with {ダンスの激しさ} movements, starting from '{歌い出し秒数}' and lip-syncing to: \"{歌詞}\".\n\n[Scene 2: Interlude (30s)]\nThe camera spins while she playfully holds up color swatches and design planners in perfect rhythm with the beats.\n\n[Scene 3: Chorus Climax (15s)]\nStriking a cute, gesturing finish pose with a playful wink toward the camera. Perfectly synchronized lip-sync matching the grand finale.",
             defaults: {
+              "MP3ファイル名": "smileplus_design.mp3",
+              "歌い出し秒数": "0:05",
               "歌詞": "あなたのビジョンをカタチに、未来を彩るSmile Webデザイン！"
             },
             tip: "デザイナーの写真やイラストを歌わせて踊らせることで、先進的でクリエイティブな制作会社のカルチャーをエモーショナルに訴求できます。"
@@ -882,7 +885,7 @@
             template30: "【Flow 2シーン連動構成】\n[シーン1:データ課題の提起]\n（アップロードした開発者画像から開始）日本の開発者が、{口パク演出スタイル}。タブレットを片手に持ち、少し真剣に語る。完璧な口パク（リップシンク）同期。『{セリフ30_1}』\n\n[シーン2:AIマッチングの解決]\n表情が明るい笑顔になり、アプリの使いやすさを手振りを交えながら明るく紹介。完璧なリップシンク同期。『{セリフ30_2}』",
             templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: App Challenge]\n(Starting from the uploaded Japanese developer image) A Japanese app developer is {口パク演出スタイル}, speaking to the viewer with natural hand movements about web strategy. Perfectly synchronized lip-sync: \"{セリフ30_1}\"\n\n[Scene 2: matching solution]\nHis expression shifts to a happy, satisfied smile, presenting the dashboard on the phone screen with polite, fluid hand gestures. Perfectly synchronized lip-sync: \"{セリフ30_2}\"",
             template60: "【Flow 3シーン連動構成】\n[シーン1:お悩み共感]\n（アップロードした開発者画像から開始）日本の開発者が、{口パク演出スタイル}。「面倒なExcel作業やデータ照合に、毎日時間を取られていませんか？」と親身に語りかける。完璧な口パク同期。『{セリフ60_1}』\n\n[シーン2:みっけツールの革新性]\nタブレットをトントンと指さしながら、AIマッチングの速さを身ぶり手ぶりを大きく交えて嬉しそうに解説。完璧なリップシンク同期。『{セリフ60_2}』\n\n[シーン3:お試し呼びかけ]\n最後はカメラに向かって頼もしく頷きながら一礼。簡単にお試しできる魅力を笑顔でジェスチャー紹介。完璧なリップシンク同期。『{セリフ60_3}』",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Complexity empathy]\n(Starting from the uploaded Japanese developer image) A Japanese app developer is {口パク演出スタイル}, explaining about office inefficiencies. Perfectly synchronized lip-sync: \"{60_1}\"\n\n[Scene 2: matching innovation]\nPointing excitedly at the matching rate pop-up displayed on the screen with dynamic, friendly hand movements. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: CTA invitation]\nNodding reassuringly with a welcoming gesture, bowing politely with an optimistic smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Complexity empathy]\n(Starting from the uploaded Japanese developer image) A Japanese app developer is {口パク演出スタイル}, explaining about office inefficiencies. Perfectly synchronized lip-sync: \"{セリフ60_1}\"\n\n[Scene 2: matching innovation]\nPointing excitedly at the matching rate pop-up displayed on the screen with dynamic, friendly hand movements. Perfectly synchronized lip-sync: \"{セリフ60_2}\"\n\n[Scene 3: CTA invitation]\nNodding reassuringly with a welcoming gesture, bowing politely with an optimistic smile. Perfectly synchronized lip-sync: \"{セリフ60_3}\"",
             defaults: {
               "セリフ15": "面倒なデータ分析はもう不要！このアプリを使えば、自社の『隠れた価値』が3タップで見つかります！",
               "セリフ30_1": "「補助金や融資、自社に合う制度が多すぎて選べない…」そう悩んでいませんか？情報の海で迷うのはもう終わりです。",
@@ -891,7 +894,7 @@
               "セリフ60_2": "私たちの新しいSaaSツールは、独自のAIアルゴリズムが隠れたお宝（マッチデータ）を自動抽出し、瞬時にスコアリングします。",
               "セリフ60_3": "開発者の私たちSmile Plusが、導入から運用まで完全に伴走。まずは無料診断で、その圧倒的な速さを体験してください！"
             },
-            tip: "アバターをアップロードして動画化することで、新機能リリースのPRリール動画などが外注費ゼロで毎日量産可能になります。"
+            tip: "SaaSキャラクターをアップロードして動画化することで、新機能リリースのPRリール動画などが外注費ゼロで毎日量産可能になります。"
           },
           5: {
             template15: "散らかった紙の領収書やExcelのデータが、画面に入った瞬間に光の粒子へと変化し、整然とした美しい{ダッシュボード}へと再構築されるスピーディーな遷移動画。",
@@ -922,7 +925,7 @@
             tip: "製品紹介PVの背景や、対談シーンの後ろに合成するための、ノイズの一切ない近未来ループ素材です。"
           },
           9: {
-            template15: "日本のモダンオフィスの背景の壁に取り付けられているテレビモニターの中に、{動画コンテンツ}が綺麗に流れている様子を追加してください。斜めの角度や光沢も完全に調和させること。",
+            template15: "日本のモダンオフィスの背景の壁に取り付けられているテレビモニターの中に、{動画コンテンツ}が綺麗に流れている様子を追加してください。斜めのアングルや光沢も完全に調和させること。",
             templateEn15: "Insert the promotional video clip showing '{動画コンテンツ}' smoothly playing inside the TV screen mounted on the modern office wall.",
             defaults: { "動画コンテンツ": "「みっけシリーズ」の紹介PVアニメーション" },
             tip: "一般的な実写オフィスの撮影動画のモニター画面に、自社のサービス画面をハメコミ合成します。"
@@ -978,14 +981,16 @@
           },
           // NEW 17 PROMPT
           17: {
-            template15: "（アップロードした『{キャラクター}』の画像とMP3音源から開始）アプリの公式マスコットキャラクターが、アップロードされた『{曲調}』のビートに完全にシンクロして、{ダンスの激しさ}で歌って踊る。ボーカルのメロディと歌詞に合わせて口パク（リップシンク）を完全に同期させ、サビの『{歌詞}』の瞬間に満面の笑顔でアピールする15秒の音楽連動CM動画。",
-            templateEn15: "(Starting from the uploaded {キャラクター} image and the uploaded MP3) The official Japanese {キャラクター} performs a beautifully synchronized dance matching the beat of the uploaded {曲調} song with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" in this 15-second music promo.",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロステップ]\n（アップロードした画像とMP3から開始）『{曲調}』のリズムに乗って、{キャラクター}が可愛らしく{ダンスの激しさ}で歌い踊る。口パク同期。『{歌詞}』\n\n[シーン2:大サビ]\n曲が一番盛り上がるBメロからサビへ。スマートフォンのマッチングUI画面の横で、さらに笑顔でイキイキと歌い踊り、完璧に口パク同期する様子。",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Mascot Intro]\n(Starting from uploaded assets) The Japanese {キャラクター} grooves happily to the {曲調} beat with {ダンスの激しさ} steps, lip-syncing: \"{歌詞}\".\n\n[Scene 2: App Chorus]\nAs the chorus drops, the mascot dances beautifully next to the financial dashboard screen, matching mouth shapes to the vocals flawlessly.",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロード画像とMP3から開始）ハッピーな『{曲調}』のメロディに合わせ、笑顔で{ダンスの激しさ}で歌い踊る{キャラクター}。口パク完璧。 『{歌詞}』\n\n[シーン2:間奏(30秒)]\n画面上のデータグラフがリズムよく動く背景の前で、キャラクターがお洒落に回り込みながら踊る間奏用カット。\n\n[シーン3:大サビ・フィニッシュ(15秒)]\n最後の盛り上がりに合わせ、ウインクをして「みっけ！」の決めポーズ。完璧なリップシンク同期。",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Playful Verse (15s)]\n(Starting from uploaded assets) The Japanese {キャラクター} dances playfully to {曲調} with {ダンスの激しさ} steps, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Graphic Interlude (30s)]\nBouncing happily in front of futuristic charts, mimicking scrolling actions on virtual screens in perfect rhythm.\n\n[Scene 3: Final Chorus (15s)]\nStriking a cute signature brand pose with a playful wink toward the camera. Perfectly synchronized lip-sync matching the grand finale.",
+            template15: "（アップロードした『{キャラクター}』の画像、およびFlow側にアップロードした音声ファイル『{MP3ファイル名}』から開始）アプリの公式マスコットキャラクターが、アップロードされた『{曲調}』のビートに完全にシンクロして、{ダンスの激しさ}で歌って踊る。歌声と歌詞に合わせて口（リップシンク）を完全に同期させ、サビの『{歌詞}』の瞬間に『{歌い出し秒数}』から満面の笑顔でアピールする15秒の音楽連動CM動画。外部画像のテクスチャや特徴を完全に維持すること。",
+            templateEn15: "(Starting from the uploaded {キャラクター} image and the uploaded MP3 audio file '{MP3ファイル名}') The official Japanese {キャラクター} performs a beautifully synchronized dance matching the beat of '{曲調}' with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" starting precisely from '{歌い出し秒数}' in this 15-second music promo.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロステップ]\n（アップロードした画像とFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』のリズムに乗って、{キャラクター}が可愛らしく{ダンスの激しさ}で歌い踊る。完璧な口パク同期。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:大サビ]\n曲が一番盛り上がるBメロからサビへ。スマートフォンのマッチングUI画面の横で、さらに笑顔でイキイキと歌い踊り、完璧に口パク同期する様子。外部画像のテクスチャや特徴を完全に維持すること。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Mascot Intro]\n(Starting from uploaded assets and '{MP3ファイル名}') The Japanese {キャラクター} grooves happily to the {曲調} beat with {ダンスの激しさ} steps, starting from '{歌い出し秒数}' and lip-syncing: \"{歌詞}\".\n\n[Scene 2: App Chorus]\nAs the chorus drops, the mascot dances beautifully next to the financial dashboard screen, matching mouth shapes to the vocals flawlessly.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロード画像とFlow側オーディオ『{MP3ファイル名}』から開始）ハッピーな『{曲調}』のメロディに合わせ、笑顔で{ダンスの激しさ}で歌い踊る{キャラクター}。口パク完璧。『{歌い出し秒数}』から開始。 『{歌詞}』\n\n[シーン2:間奏(30秒)]\n画面上のデータグラフがリズムよく動く背景の前で、キャラクターがお洒落に回り込みながら踊る間奏用カット。手のひらでの愉快なジェスチャー動作。\n\n[シーン3:大サビ・フィニッシュ(15秒)]\n最後の盛り上がりに合わせ、ウインクをして「みっけ！」の決めポーズ。完璧なリップシンク同期。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Playful Verse (15s)]\n(Starting from uploaded assets and '{MP3ファイル名}') The Japanese {キャラクター} dances playfully to {曲調} with {ダンスの激しさ} steps, starting from '{歌い出し秒数}' and lip-syncing to: \"{歌詞}\".\n\n[Scene 2: Graphic Interlude (30s)]\nBouncing happily in front of futuristic charts, mimicking scrolling actions on virtual screens in perfect rhythm with the beats.\n\n[Scene 3: Final Chorus (15s)]\nStriking a cute signature brand pose with a playful wink toward the camera. Perfectly synchronized lip-sync matching the grand finale.",
             defaults: {
               "キャラクター": "「みっけ」の公式3Dロボットマスコット",
+              "MP3ファイル名": "smileplus_app_theme.mp3",
+              "歌い出し秒数": "0:05",
               "歌詞": "面倒な作業をみっけAIで全自動！"
             },
             tip: "マスコットキャラクターのイラストや3D素材をアップロード。AIの特性上、3D調のキャラはダンスや口パクの崩れが少なく、非常に相性が良いです。"
@@ -994,7 +999,7 @@
       },
       cosme: {
         name: "化粧品・コスメ販売",
-        description: "オーガニックコスメ、スキンケア、新色メイクなど。視覚的な美しさ、肌の変化、憧れのライフスタイルを完全に表現します。",
+        description: "オーガニックコスメ、スキンケア, 新色メイクなど。視覚的な美しさ、肌の変化、憧れのライフスタイルを完全に表現します。",
         color: "from-pink-400 to-rose-500",
         prompts: {
           1: {
@@ -1074,7 +1079,7 @@
           11: {
             template15: "（カメラの位置：上から近づくアングルに変更）透明なトレイに敷き詰められた{美容素材}の中心に向かって、黄金色のオイルが一滴落ち、波紋が美しく広がる様子を、垂直の真上からクローズアップで捉えた映像に変更。日本のビューティーサロンの演出。",
             templateEn15: "(Camera instruction: Move to top-down macro) A slow-motion vertical shot of a golden serum droplet falling onto a tray of pink petals, creating perfect circular ripples.",
-            defaults: { "美容素材": "ピンクのローズペタル" },
+            defaults: { "美容素材": "ピンク of ローズペタル" },
             tip: "コスメPRの王道である、マテリアル（美容液の質感や色）の美しさを強調するアングルを演出します。"
           },
           12: {
@@ -1112,13 +1117,15 @@
           },
           // NEW 17 PROMPT
           17: {
-            template15: "（アップロードした日本のビューティーモデル画像とMP3音源から開始）自作のオリジナル曲『{曲調}』のメロディとビートに合わせて、日本の女性モデルが{ダンスの激しさ}で歌って踊る。歌詞と歌声に合わせて口パク（リップシンク）を完全に同期させ、サビの『{歌詞}』のタイミングで、ツヤ肌を輝かせながらカメラに向かってウィンクする魅力的な15秒音楽PV。",
-            templateEn15: "(Starting from the uploaded Japanese model image and MP3) A beautiful Japanese model performs an elegant dance perfectly syncing with the rhythm of the uploaded {曲調} song with {ダンスの激しさ} motions. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" in this 15-second music promo.",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロステップ]\n（アップロードしたモデルとMP3から開始）『{曲調}』の優しいメロディに乗り、日本の女性モデルが髪をなびかせながら{ダンスの激しさ}で優しくステップ。口パク同期。『{歌詞}』\n\n[シーン2:サビでツヤ肌アピール]\nサビで美容液ボトルを手に掲げ、みずみずしく潤う肌をアピールするように、光を浴びながら笑顔で歌い踊り、完全に口パク同期する様子。",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Elegant Intro]\n(Starting from uploaded assets) A Japanese model sways gracefully to the gentle {曲調} melody with {ダンスの激しさ} motions, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Radiant Chorus]\nHolding up the beauty bottle, dancing beautifully under warm morning light to show her radiant skin with perfect synchronized lip-sync.",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロードしたモデルとMP3から開始）『{曲調}』のメロディに合わせ、笑顔で{ダンスの激しさ}で歌い踊り始める日本の女性。口パク完璧。 『{歌詞}』\n\n[シーン2:間奏とターン(30秒)]\n美容液のボトルが浮かび上がる背景の前で、モデルが心地よさそうに軽快に回り込みながらお茶目に踊る間奏用カット。\n\n[シーン3:大サビ・ウインク(15秒)]\nサビの盛り上がりに合わせ、両手でハートを作り、最高の透明感あふれる笑顔でウィンク。完璧なリップシンク同期。",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Radiant Verse (15s)]\n(Starting from uploaded assets) Dancing beautifully to the {曲調} track with {ダンスの激しさ} movements, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Texture Interlude (30s)]\nWith golden oil droplets floating elegantly behind her, she spins and sways with natural, relaxed hand gestures in perfect rhythm.\n\n[Scene 3: Climax Wink (15s)]\nMaking a sweet heart gesture with both hands, smiling brightly with extreme skin transparency. Perfectly synchronized lip-sync matching the grand finale.",
+            template15: "（アップロードした日本のビューティーモデル画像とMP3音源、およびFlow側オーディオファイル『{MP3ファイル名}』から開始）自作のオリジナル曲『{曲調}』のメロディとビートに合わせて、日本の女性モデルが{ダンスの激しさ}で歌って踊る。歌声と歌詞に合わせて口（リップシンク）を完全に同期させ、サビの『{歌詞}』のタイミング（『{歌い出し秒数}』から）で、ツヤ肌を輝かせながらカメラに向かってウィンクする魅力的な15秒音楽PV。外部画像のテクスチャや特徴を完全に維持すること。",
+            templateEn15: "(Starting from the uploaded Japanese model image and MP3 audio file '{MP3ファイル名}') A beautiful Japanese model performs an elegant dance perfectly syncing with the rhythm of '{曲調}' song with {ダンスの激しさ} motions, starting precisely from '{歌い出し秒数}' and lip-syncing to: \"{歌詞}\" in this 15-second music promo.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロステップ]\n（アップロードしたモデルとFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』の優しいメロディに乗り、日本の女性モデルが髪をなびかせながら{ダンスの激しさ}で優しくステップ。口パク同期。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:サビでツヤ肌アピール]\nサビで美容液ボトルを手に掲げ、みずみずしく潤う肌をアピールするように、光を浴びながら笑顔で歌い踊り、完全に口パク同期する様子。外部画像のテクスチャや特徴を完全に維持すること。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Elegant Intro]\n(Starting from uploaded assets and '{MP3ファイル名}') A Japanese model sways gracefully to the gentle {曲調} melody with {ダンスの激しさ} motions, starting from '{歌い出し秒数}' and lip-syncing: \"{歌詞}\".\n\n[Scene 2: Radiant Chorus]\nHolding up the beauty bottle, dancing beautifully under warm morning light with perfect synchronized lip-sync.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロードしたモデルとFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』のメロディに合わせ、笑顔で{ダンスの激しさ}で歌い踊り始める日本の女性。口パク完璧。『{歌い出し秒数}』から開始。 『{歌詞}』\n\n[シーン2:間奏とターン(30秒)]\n美容液のボトルが浮かび上がる背景の前で、モデルが心地よさそうに軽快に回り込みながらお茶目に踊る間奏用カット。音源ビートと手振りが完全にシンクロしている様子。\n\n[シーン3:大サビ・ウインク(15秒)]\nサビの盛り上がりに合わせ、両手でハートを作り、最高の透明感あふれる笑顔でウィンク。完璧なリップシンク同期。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Radiant Verse (15s)]\n(Starting from uploaded assets and '{MP3ファイル名}') Dancing beautifully to the {曲調} track with {ダンスの激しさ} movements, starting from '{歌い出し秒数}' and lip-syncing to: \"{歌詞}\".\n\n[Scene 2: Texture Interlude (30s)]\nWith golden oil droplets floating elegantly behind her, she spins and sways with natural, relaxed hand gestures in perfect rhythm with the beats.\n\n[Scene 3: Climax Wink (15s)]\nMaking a sweet heart gesture with both hands, smiling brightly with extreme skin transparency. Perfectly synchronized lip-sync matching the grand finale.",
             defaults: {
+              "MP3ファイル名": "smileplus_cosme_bgm.mp3",
+              "歌い出し秒数": "0:05",
               "歌詞": "潤いつづく、わたし好みのツヤ肌みっけ！"
             },
             tip: "お気に入りのアバターやブランド専属モデルの画像を使用し、上品で高級感のあるミュージックビデオ風のCMを作成するのに最適です。"
@@ -1209,7 +1216,7 @@
             template15: "（カメラの位置：近づく／マクロレンズに変更）日本の職人が木材にノミを立てて、コンッと優しく金槌で叩き、{削る一瞬}を、ノミの刃先すれすれの極めて至近距離から捉えた日本の工房のマクロアングルに変更。",
             templateEn15: "(Camera instruction: Move closer) Shift to an extreme close-up macro shot of the chisel shaving a wood block carefully inside the quiet Japanese workshop.",
             defaults: { "削る一瞬": "美しいカンナ屑がカールしながら剥がれる一瞬" },
-            tip: "職人の『ミリ単位の超絶技法』を、言葉ではなく映像の緊迫感とディテールで伝えます。"
+            tip: "職人の『ミリ単位 of 超絶技法』を、言葉ではなく映像の緊迫感とディテールで伝えます。"
           },
           12: {
             template15: "（カメラの位置：ドリーアウト＆ズームアウトを選択）日本の町工場で黙々と作業する日本の若手職人の手元から、カメラが滑らかに後退し、{工場内}で多くの日本人職人が活気を持って作業している工場全体の様子を見渡す広角アングルに変更。",
@@ -1246,14 +1253,16 @@
           },
           // NEW 17 PROMPT
           17: {
-            template15: "（アップロードした{キャラクター}の画像とMP3音源から開始）自社のPRソング『{曲調}』のビートとテンポに完全にシンクロさせて、日本の{キャラクター}が{ダンスの激しさ}で歌って踊る。歌声と歌詞に合わせて口パク（リップシンク）を完全に同期させ、サビの『{歌詞}』のタイミングで満面の笑顔でアピールする15秒の音楽連動CM動画。外部画像のテクスチャや特徴を完全に維持すること。",
-            templateEn15: "(Starting from the uploaded {キャラクター} image and the uploaded MP3) A professional Japanese {キャラクター} performs a beautifully synchronized dance matching the beat of the uploaded {曲調} song with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" in this 15-second music promo.",
-            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロステップ]\n（アップロードした画像とMP3から開始）『{曲調}』のリズムに乗って、{キャラクター}がハッピーに{ダンスの激しさ}で歌い踊る。口パク同期。『{歌詞}』\n\n[シーン2:大サビ]\n曲が一番盛り上がるBメロからサビへ。レトロな日本の商店街背景の横で、さらに笑顔でイキイキと歌い踊り、完璧に口パク同期する様子。外部画像のテクスチャや特徴を完全に維持すること。",
-            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Craftsman Intro]\n(Starting from uploaded assets) A Japanese {キャラクター} steps rhythmically to the uploaded {曲調} track with {ダンスの激しさ} motions, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Shop Chorus]\nThe beat intensifies; the character dances with highly expressive movements, perfectly synchronizing mouth shapes to the vocals and lyrics.",
-            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロード画像とMP3から開始）『{曲調}』の明るい音にのり、{ダンスの激しさ}で踊り出す日本の{キャラクター}。口パク完璧。 『{歌詞}』\n\n[シーン2:間奏と手振り(30秒)]\n間奏。職人の作業場や工場の美しい背景が流れる中、キャラクターがテンポ良くお洒落に回り込みながら踊る演出カット。\n\n[シーン3:大サビ・フィニッシュ(15秒)]\n最後の盛り上がりに合わせ、カメラに向かって大きくガッツポーズをし、満面の笑顔で看板を掲げて深く一礼。完璧なリップシンク同期。",
-            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Dynamic Verse (15s)]\n(Starting from uploaded assets) Dancing proudly to the {曲調} song with {ダンスの激しさ} steps, lip-syncing: \"{歌詞}\".\n\n[Scene 2: Craft Interlude (30s)]\nWith traditional wooden workspace elements behind them, they dance playfully with wooden tools in perfect sync with the BPM.\n\n[Scene 3: Grand Finale (15s)]\nHolding up the brand logo sign proudly, bowing with a hearty craftsman's smile. Perfectly synchronized lip-sync matching the grand finale.",
+            template15: "（アップロードした{キャラクター}の画像とMP3音源、およびFlow側オーディオファイル『{MP3ファイル名}』から開始）自社のPRソング『{曲調}』のビートとテンポに完全にシンクロさせて、日本の{キャラクター}が{ダンスの激しさ}で歌って踊る。歌声と歌詞に合わせて口パク（リップシンク）を完全に同期させ、サビの『{歌詞}』のタイミング（『{歌い出し秒数}』から）で満面の笑顔でアピールする15秒の音楽連動CM動画。外部画像のテクスチャや特徴を完全に維持すること。",
+            templateEn15: "(Starting from the uploaded {キャラクター} image and the uploaded MP3 audio file '{MP3ファイル名}') A professional Japanese {キャラクター} performs a beautifully synchronized dance matching the beat of '{曲調}' song with {ダンスの激しさ} movements. Flawlessly synchronizing lip-sync with lyrics: \"{歌詞}\" starting precisely from '{歌い出し秒数}' in this 15-second music promo.",
+            template30: "【Flow 2シーン連動構成】\n[シーン1:イントロステップ]\n（アップロードした画像とFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』のリズムに乗って、{キャラクター}がハッピーに{ダンスの激しさ}で歌い踊る。口パク同期。『{歌い出し秒数}』から開始。『{歌詞}』\n\n[シーン2:大サビ]\n曲が一番盛り上がるBメロからサビへ。レトロな日本の商店街背景の横で、さらに笑顔でイキイキと歌い踊り、完璧に口パク同期する様子。外部画像のテクスチャや特徴を完全に維持すること。",
+            templateEn30: "[Flow 2-Scene Connected Series]\n[Scene 1: Craftsman Intro]\n(Starting from uploaded assets and '{MP3ファイル名}') A Japanese {キャラクター} steps rhythmically to the uploaded {曲調} track with {ダンスの激しさ} motions, starting from '{歌い出し秒数}' and lip-syncing: \"{歌詞}\".\n\n[Scene 2: Shop Chorus]\nThe beat intensifies; the character dances with highly expressive movements, perfectly synchronizing mouth shapes to the vocals and lyrics.",
+            template60: "【Flow 3シーン連動構成】\n[シーン1:歌い出し(15秒)]\n（アップロード画像とFlow側オーディオ『{MP3ファイル名}』から開始）『{曲調}』の明るい音にのり、{ダンスの激しさ}で踊り出す日本の{キャラクター}。口パク完璧。『{歌い出し秒数}』から開始。 『{歌詞}』\n\n[シーン2:間奏と手振り(30秒)]\n間奏。職人の作業場や工場の美しい背景が流れる中、キャラクターがテンポ良くお洒落に回り込みながら踊る演出カット。\n\n[シーン3:大サビ・フィニッシュ(15秒)]\n最後の盛り上がりに合わせ、カメラに向かって大きくガッツポーズをし、満面の笑顔で看板を掲げて深く一礼。完璧なリップシンク同期。",
+            templateEn60: "[Flow 3-Scene Connected Series]\n[Scene 1: Dynamic Verse (15s)]\n(Starting from uploaded assets and '{MP3ファイル名}') Dancing proudly to the {曲調} song with {ダンスの激しさ} steps, starting from '{歌い出し秒数}' and lip-syncing to: \"{歌詞}\".\n\n[Scene 2: Craft Interlude (30s)]\nWith traditional wooden workspace elements behind them, they dance playfully with wooden tools in perfect sync with the BPM.\n\n[Scene 3: Grand Finale (15s)]\nHolding up the brand logo sign proudly, bowing with a hearty craftsman's smile. Perfectly synchronized lip-sync matching the grand finale.",
             defaults: {
               "キャラクター": "ハッピを着た可愛い招き猫のキャラクター",
+              "MP3ファイル名": "smileplus_sme_song.mp3",
+              "歌い出し秒数": "0:05",
               "歌詞": "みんなの笑顔をSmile Plus、いい家造りをみっけよう！"
             },
             tip: "自社のマスコット招き猫や代表職人アバターの写真をアップロードして、PRソングを歌わせて踊らせるのに最適な演出プロンプトです。"
@@ -1650,6 +1659,20 @@
       const showDanceStyleControls = commonObj.hasDanceStyle;
       const showMusicStyleControls = commonObj.hasMusicStyle; // NEW
 
+      // Step-by-step tutorial banner specifically for MP3 integration
+      const stepGuideHTML = showMusicStyleControls ? `
+        <div class="p-4 sm:p-5 rounded-2xl border border-emerald-100 bg-emerald-50/40 space-y-3">
+          <div class="text-xs font-black text-emerald-800 flex items-center space-x-1.5">
+            <span>⚠️ Flow側での作成手順 3ステップ (迷ったらココを確認！)</span>
+          </div>
+          <ol class="list-decimal pl-5 text-[11px] text-slate-600 space-y-1.5 font-medium">
+            <li>Google Flow の画面にアクセスし、お手元の<strong>「キャラクター画像 (静止画)」</strong>と<strong>「自作のMP3ファイル」</strong>を両方アップロードします。</li>
+            <li>このアプリの変数パラメータ欄に、アップロードした実際の<strong>「MP3ファイル名」</strong>、歌い始めさせたい<strong>「歌い出し秒数」</strong>、歌わせたい<strong>「歌詞」</strong>をそれぞれ日本語で入力します。</li>
+            <li>生成されたプロンプトを下のコピーボタンでコピーし、Flowの指示テキスト欄に貼り付けて実行してください！</li>
+          </ol>
+        </div>
+      ` : '';
+
       workspace.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
           <div>
@@ -1792,6 +1815,9 @@
         <p class="text-xs sm:text-sm text-slate-500 leading-relaxed italic">
           🎯 <strong>プロの実務アドバイス:</strong> ${industryPromptObj.tip}
         </p>
+
+        <!-- MP3 Step-by-step Guide -->
+        ${stepGuideHTML}
 
         ${customFieldsHTML}
 
